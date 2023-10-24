@@ -34,4 +34,32 @@ public class Utilities {
 		list.addAll(set);
 		return list;
 	}
+
+	public static ArrayList<Double> addLists(ArrayList<Double> l1, ArrayList<Double> l2) {
+		ArrayList<Double> res = new ArrayList<Double>();
+		for (int i = 0; i < min(l1.size(), l2.size()); i++) {
+			res.add(l1.get(i) + l2.get(i));
+		}
+	}
+
+	public static ArrayList<Double> subtractLists(ArrayList<Double> l1, ArrayList<Double> l2) {
+		ArrayList<Double> res = new ArrayList<Double>();
+		for (int i = 0; i < min(l1.size(), l2.size()); i++) {
+			res.add(l1.get(i) - l2.get(i));
+		}
+	}
+
+	public static ArrayList<Double> multiplyLists(ArrayList<Double> l1, ArrayList<Double> l2) {
+		ArrayList<Double> res = new ArrayList<Double>();
+		for (int i = 0; i < min(l1.size(), l2.size()); i++) {
+			res.add(l1.get(i) * l2.get(i));
+		}
+	}
+
+	public static ArrayList<Double> divideLists(ArrayList<Double> l1, ArrayList<Double> l2) {
+		ArrayList<Double> res = new ArrayList<Double>();
+		for (int i = 0; i < min(l1.size(), l2.size()); i++) {
+			res.add(l1.get(i) / l2.get(i));
+		}
+	}
 }

@@ -27,4 +27,8 @@ public class Workload {
     
     return null;
   }
+
+  public int getTaskCount() {
+    return this.tasks.size();
+  }
 }

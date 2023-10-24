@@ -19,7 +19,6 @@ public class Particle {
   private double[] personalBestPosition;
   private Double personalBestObjectiveValue;
 
-  private int nTasks;
   private int minPosition;
   private int maxPosition;
   private int maxAbsoluteVelocity;
@@ -27,9 +26,8 @@ public class Particle {
   private Workload workload;
   private DataCenter dataCenter;
 
-  public Particle(DataCenter dataCenter, int nTasks, Workload workload, int minPosition, int maxPosition, int maxAbsoluteVelocity) {
+  public Particle(DataCenter dataCenter, Workload workload, int minPosition, int maxPosition, int maxAbsoluteVelocity) {
     this.id = Particle.idCounter++;
-    this.nTasks = nTasks;
     this.minPosition = minPosition;
     this.maxPosition = maxPosition;
     this.maxAbsoluteVelocity = maxAbsoluteVelocity;
@@ -39,16 +37,16 @@ public class Particle {
   }
 
   private void randomInitialization() {
-    this.positionVector = new double[this.nTasks];
-    this.velocityVector = new double[this.nTasks];
+    this.positionVector = new double[this.workload.getTaskCount()];
+    this.velocityVector = new double[this.workload.getTaskCount()];
 
-    // Randomly generate the particle's position vector in d-dimensional space where d=nTasks
-    for (int i = 0; i < this.nTasks; i++) {
+    // Randomly generate the particle's position vector in d-dimensional space where d=# Tasks
+    for (int i = 0; i < this.workload.getTaskCount(); i++) {
       this.positionVector[i] = Utilities.getRandomDouble(this.minPosition, this.maxPosition);
     }
 
     // Randomly generate velocities for each component of the position vector
-    for (int i = 0; i < this.nTasks; i++){
+    for (int i = 0; i < this.workload.getTaskCount(); i++){
       this.velocityVector[i] = Utilities.getRandomDouble(-this.maxAbsoluteVelocity, this.maxAbsoluteVelocity);
     }
 
@@ -71,7 +69,15 @@ public class Particle {
       this.taskVmMapping.put(task, virtualMachine);
       this.dataCenter.addExecutionTimeToVirtualMachine(task.getMillionsOfInstructions(), virtualMachine);
     }
-  }  
+  }
+
+  private void updateVelocity() {
+    // TODO
+  }
+
+  private void updatePosition() {
+    // TODO
+  }
 
   public int getId() {
     return this.id;
