@@ -1,8 +1,6 @@
 package syslab.cloudcomputing.utils;
 
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 
 public class Utilities {
   /*
@@ -22,16 +20,5 @@ public class Utilities {
 	 */
 	public static Double getRandomDouble(double min, double max) {
 		return Math.random() * (max - min) + min;
-	}
-
-  /**
-	 * Transforms a set to an ArrayList
-	 * @param set The input set
-	 * @return The ArrayList object containing all items from the input set
-	 */
-	public static <T> ArrayList<T> setToList(Set<T> set) {
-		ArrayList<T> list = new ArrayList<>();
-		list.addAll(set);
-		return list;
 	}
 }
