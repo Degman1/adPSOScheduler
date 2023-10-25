@@ -18,6 +18,8 @@ public class Particle {
   final static double c1 = 2.0;
   final static double c2 = 1.49455;
 
+  private static double w;
+
   private static int idCounter = 1;
 	private int id;
 
@@ -30,6 +32,9 @@ public class Particle {
   private Matrix personalBestPosition;
   private double personalBestObjectiveValue;
 
+  private Matrix globalBestPosition;
+  private double globalBestObjectiveValue;
+
   private Workload workload;
   private DataCenter dataCenter;
 
@@ -40,8 +45,10 @@ public class Particle {
     randomInitialization();
   }
 
-  public void runIteration() {
+  // Returns true is this iteration was a success (ie. it acheived a new personal best)
+  public Boolean runIteration() {
     // TODO
+    return false;
   }
 
   private void randomInitialization() {
@@ -69,11 +76,16 @@ public class Particle {
     }
   }
 
-  private void updateVelocity() {
-    // TODO
+  private void updateVelocity(double r1, double r2) {
+    this.velocity = this.velocity.multiply(Particle.w);
+    Matrix localExploration = this.personalBestPosition.subtract(this.position).multiply(Particle.c1).multiply(r1);
+    Matrix globalExploration = this.globalBestPosition.subtract(this.position).multiply(Particle.c2).multiply(r2);
+    this.velocity.add(localExploration).add(globalExploration);
   }
 
   private void updatePosition() {
+    // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
+    // Because this version of PSO is discrete in nature
     // TODO
   }
 
@@ -100,5 +112,20 @@ public class Particle {
 
     return this.taskVmMapping;
   }
-  
+
+  public void setGlobalBestPosition(Matrix globalBestPosition) {
+    this.globalBestPosition = globalBestPosition;
+  }
+
+  public void setGlobalBestObjectiveValue(double globalBestObjectiveValue) {
+    this.globalBestObjectiveValue = globalBestObjectiveValue;
+  }
+ 
+  public static void setW(double w) {
+    Particle.w = w;
+  }
+
+  public static double getW() {
+    return Particle.w;
+  }
 }
