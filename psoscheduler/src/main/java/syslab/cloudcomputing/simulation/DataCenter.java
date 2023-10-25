@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class DataCenter {
     return this.virtualMachines.get(id);
   }
 
-  public void resetVirtualMachineReadyTime() {
+  public void resetVirtualMachineReadyTimes() {
     this.virtualMachineReadyTime.clear();
     for (VirtualMachine virtualMachine : virtualMachines) {
       this.virtualMachineReadyTime.put(virtualMachine, 0.0);
@@ -81,5 +81,9 @@ public class DataCenter {
 
   public double computeThroughput() {
     return this.taskCount / this.computeMakespan();
+  }
+
+  public int getVirtualMachineCount() {
+    return this.virtualMachines.size();
   }
 }

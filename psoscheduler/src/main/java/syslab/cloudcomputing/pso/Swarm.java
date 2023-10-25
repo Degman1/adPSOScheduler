@@ -1,6 +1,9 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.pso;
 
 import java.util.ArrayList;
+
+import syslab.cloudcomputing.simulation.DataCenter;
+import syslab.cloudcomputing.simulation.Workload;
 
 public class Swarm {
   private ArrayList<Particle> particles;

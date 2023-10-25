@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.simulation;
 
 import java.util.ArrayList;
 

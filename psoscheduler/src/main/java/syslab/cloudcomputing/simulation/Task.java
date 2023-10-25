@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.simulation;
 
 /*
  * Task represents a single computational task that is required to be completed 

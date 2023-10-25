@@ -2,6 +2,14 @@ package syslab.cloudcomputing;
 
 import java.util.HashMap;
 
+import syslab.cloudcomputing.simulation.DataCenter;
+import syslab.cloudcomputing.simulation.Task;
+import syslab.cloudcomputing.simulation.VirtualMachine;
+import syslab.cloudcomputing.simulation.Workload;
+import syslab.cloudcomputing.utils.Matrix;
+
+// TODO use SJF as a heuristic for initialization instead of random initialization?
+
 /*
  * Particle represents a complete solution to the optimization problem, meaning a complete 
  * mapping of tasks to virtual machines. Each particle's goal is to move towards the
@@ -12,58 +20,45 @@ public class Particle {
   private static int idCounter = 1;
 	private int id;
 
-  private double[] positionVector;
-  private double[] velocityVector;
+  // The velocity represents a 2D array where the rows are the tasks and the columns are the positions
+  // Source: https://www.sciencedirect.com/science/article/pii/S1319157820305279
+  private Matrix position;
+  private Matrix velocity;
   private HashMap<Task, VirtualMachine> taskVmMapping = new HashMap<Task, VirtualMachine>();
 
-  private double[] personalBestPosition;
+  private Matrix personalBestPosition;
   private Double personalBestObjectiveValue;
-
-  private int minPosition;
-  private int maxPosition;
-  private int maxAbsoluteVelocity;
 
   private Workload workload;
   private DataCenter dataCenter;
 
-  public Particle(DataCenter dataCenter, Workload workload, int minPosition, int maxPosition, int maxAbsoluteVelocity) {
+  public Particle(DataCenter dataCenter, Workload workload) {
     this.id = Particle.idCounter++;
-    this.minPosition = minPosition;
-    this.maxPosition = maxPosition;
-    this.maxAbsoluteVelocity = maxAbsoluteVelocity;
     this.workload = workload;
     this.dataCenter = dataCenter;
     randomInitialization();
   }
 
   private void randomInitialization() {
-    this.positionVector = new double[this.workload.getTaskCount()];
-    this.velocityVector = new double[this.workload.getTaskCount()];
+    this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
+    this.position.randomPositionInitialization();
 
-    // Randomly generate the particle's position vector in d-dimensional space where d=# Tasks
-    for (int i = 0; i < this.workload.getTaskCount(); i++) {
-      this.positionVector[i] = Utilities.getRandomDouble(this.minPosition, this.maxPosition);
-    }
+    this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
 
-    // Randomly generate velocities for each component of the position vector
-    for (int i = 0; i < this.workload.getTaskCount(); i++){
-      this.velocityVector[i] = Utilities.getRandomDouble(-this.maxAbsoluteVelocity, this.maxAbsoluteVelocity);
-    }
-
-    // Build the Task to VirtualMachine mapping based on the randomly generated position vector
+    // Build the Task to VirtualMachine mapping based on a randomly generated position
     buildTaskVmMapping();
 
     // Must compute the local best after building the task to vm mapping in the line above for accurate
     // objective function computation
-    this.personalBestPosition = this.positionVector;
+    this.personalBestPosition = this.position;
     this.personalBestObjectiveValue = dataCenter.computeObjective();
   }
 
   public void buildTaskVmMapping() {
     this.taskVmMapping.clear();
-    this.dataCenter.resetVirtualMachineReadyTime();
+    this.dataCenter.resetVirtualMachineReadyTimes();
 
-    for (int i = 0; i < this.positionVector.length; i++) {
+    for (int i = 0; i < this.position.length; i++) {
       Task task = workload.getTaskById(i);
       VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.positionVector[i]);
       this.taskVmMapping.put(task, virtualMachine);

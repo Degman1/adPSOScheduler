@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.simulation;
 
 /*
  * VirtualMachine represents a single virtual machine that sections off a portion of a
