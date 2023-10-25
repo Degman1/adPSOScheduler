@@ -43,16 +43,16 @@ public class DataCenter {
   }
 
   public void addExecutionTimeToVirtualMachine(int millionsOfInstructions, VirtualMachine virtualMachine) {
-    Double currentExecutionTime = 0.0;
+    double currentExecutionTime = 0.0;
     if (this.virtualMachineReadyTime.containsKey(virtualMachine)) {
       currentExecutionTime = this.virtualMachineReadyTime.get(virtualMachine);
     }
-    Double newExecutionTime = currentExecutionTime + getLoadExecutionTime(millionsOfInstructions, virtualMachine);
+    double newExecutionTime = currentExecutionTime + getLoadExecutionTime(millionsOfInstructions, virtualMachine);
     this.virtualMachineReadyTime.put(virtualMachine, newExecutionTime);
     taskCount++;
   }
 
-	private Double getLoadExecutionTime(int millionsOfInstructions, VirtualMachine virtualMachine) {
+	private double getLoadExecutionTime(int millionsOfInstructions, VirtualMachine virtualMachine) {
 		// The size of the task divided by the assigned VM's computation power
 		return millionsOfInstructions / (double) virtualMachine.getMillionsOfInstructionsPerSecond();
 	}

@@ -2,6 +2,8 @@ package syslab.cloudcomputing.utils;
 
 public class Matrix {
   private double[][] mtx;
+  private int rows;
+  private int columns;
 
   public Matrix(int rows, int columns) {
     this.mtx = new double[rows][columns];
@@ -24,6 +26,15 @@ public class Matrix {
         this.mtx[i][j] = Utilities.getRandomDouble(randomMin, randomMax);
       }
     }
+  }
+
+  public int getIndexOfFirstNonZeroColumnForRow(int row) {
+    for (int col = 0; col < this.mtx[0].length; col++) {
+      if (this.mtx[row][col] == 1) {
+        return col;
+      }
+    }
+    return -1;
   }
 
   private void operate(Matrix otherPosition, BinaryOperation binaryOperation) {
@@ -56,5 +67,13 @@ public class Matrix {
   public void division(Matrix otherPosition) {
     BinaryOperation division = (x, y) -> x / y;
     this.operate(otherPosition, division);
+  }
+
+  public int getRows() {
+    return this.rows;
+  }
+
+  public int getColumns() {
+    return this.columns;
   }
 }

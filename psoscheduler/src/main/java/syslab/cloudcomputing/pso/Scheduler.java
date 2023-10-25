@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.pso;
 
 public class Scheduler {
   public static void main( String[] args )

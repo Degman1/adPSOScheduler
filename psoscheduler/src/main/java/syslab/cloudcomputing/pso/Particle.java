@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.pso;
 
 import java.util.HashMap;
 
@@ -8,8 +8,6 @@ import syslab.cloudcomputing.simulation.VirtualMachine;
 import syslab.cloudcomputing.simulation.Workload;
 import syslab.cloudcomputing.utils.Matrix;
 
-// TODO use SJF as a heuristic for initialization instead of random initialization?
-
 /*
  * Particle represents a complete solution to the optimization problem, meaning a complete 
  * mapping of tasks to virtual machines. Each particle's goal is to move towards the
@@ -17,6 +15,9 @@ import syslab.cloudcomputing.utils.Matrix;
  * for cost.
  */
 public class Particle {
+  final static double c1 = 2.0;
+  final static double c2 = 1.49455;
+
   private static int idCounter = 1;
 	private int id;
 
@@ -27,7 +28,7 @@ public class Particle {
   private HashMap<Task, VirtualMachine> taskVmMapping = new HashMap<Task, VirtualMachine>();
 
   private Matrix personalBestPosition;
-  private Double personalBestObjectiveValue;
+  private double personalBestObjectiveValue;
 
   private Workload workload;
   private DataCenter dataCenter;
@@ -39,6 +40,10 @@ public class Particle {
     randomInitialization();
   }
 
+  public void runIteration() {
+    // TODO
+  }
+
   private void randomInitialization() {
     this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
     this.position.randomPositionInitialization();
@@ -46,7 +51,7 @@ public class Particle {
     this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
 
     // Build the Task to VirtualMachine mapping based on a randomly generated position
-    buildTaskVmMapping();
+    updateDataCenter();
 
     // Must compute the local best after building the task to vm mapping in the line above for accurate
     // objective function computation
@@ -54,14 +59,12 @@ public class Particle {
     this.personalBestObjectiveValue = dataCenter.computeObjective();
   }
 
-  public void buildTaskVmMapping() {
-    this.taskVmMapping.clear();
+  private void updateDataCenter() {
     this.dataCenter.resetVirtualMachineReadyTimes();
 
-    for (int i = 0; i < this.position.length; i++) {
+    for (int i = 0; i < this.position.getRows(); i++) {
       Task task = workload.getTaskById(i);
-      VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.positionVector[i]);
-      this.taskVmMapping.put(task, virtualMachine);
+      VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.position.getIndexOfFirstNonZeroColumnForRow(i));
       this.dataCenter.addExecutionTimeToVirtualMachine(task.getMillionsOfInstructions(), virtualMachine);
     }
   }
@@ -78,15 +81,23 @@ public class Particle {
     return this.id;
   }
 
-  public double[] getPositionVector() {
-    return this.positionVector;
+  public Matrix getPosition() {
+    return this.position;
   }
 
-  public double[] getVelocityVector() {
-    return this.velocityVector;
+  public Matrix getVelocityVector() {
+    return this.velocity;
   }
 
   public HashMap<Task,VirtualMachine> getTaskVmMapping() {
+    this.taskVmMapping.clear();
+
+    for (int i = 0; i < this.position.getRows(); i++) {
+      Task task = workload.getTaskById(i);
+      VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.position.getIndexOfFirstNonZeroColumnForRow(i));
+      this.taskVmMapping.put(task, virtualMachine);
+    }
+
     return this.taskVmMapping;
   }
   
