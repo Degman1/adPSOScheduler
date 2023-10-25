@@ -6,7 +6,6 @@ public class Matrix {
   private static BinaryOperation addition = (x, y) -> x + y;
   private static BinaryOperation subtraction = (x, y) -> x - y;
   private static BinaryOperation multilpication = (x, y) -> x * y;
-  private static BinaryOperation division = (x, y) -> x / y;
 
   private double[][] mtx;
   private int rows;
@@ -102,14 +101,6 @@ public class Matrix {
     return this.operate(otherPosition, Matrix.subtraction);
   }
 
-  public Matrix multiply(Matrix otherPosition) {
-    return this.operate(otherPosition, Matrix.multilpication);
-  }
-
-  public Matrix division(Matrix otherPosition) {
-    return this.operate(otherPosition, Matrix.division);
-  }
-
   private Matrix operate(double constant, BinaryOperation binaryOperation) {
     for (int i = 0; i < this.getRows(); i++) {
       for (int j = 0; j < this.getColumns(); j++) {
@@ -119,20 +110,8 @@ public class Matrix {
     return this;
   }
 
-  public Matrix add(double constant) {
-    return this.operate(constant, Matrix.addition);
-  }
-
-  public Matrix subtract(double constant) {
-    return this.operate(constant, Matrix.subtraction);
-  }
-
   public Matrix multiply(double constant) {
     return this.operate(constant, Matrix.multilpication);
-  }
-
-  public Matrix division(double constant) {
-    return this.operate(constant, Matrix.division);
   }
 
   public int getRows() {
