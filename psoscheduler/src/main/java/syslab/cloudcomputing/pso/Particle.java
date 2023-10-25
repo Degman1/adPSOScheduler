@@ -31,7 +31,6 @@ public class Particle {
   private double personalBestObjectiveValue;
 
   private Matrix globalBestPosition;
-  private double globalBestObjectiveValue;
 
   private Workload workload;
   private DataCenter dataCenter;
@@ -89,16 +88,16 @@ public class Particle {
   }
 
   private void updateVelocity(double r1, double r2, double w) {
-    Matrix previousVelocityFactor = this.velocity.multiply(Particle.w);
-    Matrix localExploration = this.personalBestPosition.subtract(this.position).multiply(Particle.c1).multiply(r1);
-    Matrix globalExploration = this.globalBestPosition.subtract(this.position).multiply(Particle.c2).multiply(r2);
+    Matrix previousVelocityFactor = this.velocity.copy().multiply(w);
+    Matrix localExploration = this.personalBestPosition.copy().subtract(this.position).multiply(Particle.c1).multiply(r1);
+    Matrix globalExploration = this.globalBestPosition.copy().subtract(this.position).multiply(Particle.c2).multiply(r2);
     this.velocity = previousVelocityFactor.add(localExploration).add(globalExploration);
   }
 
   private void updatePosition() {
     // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
     // Because this version of PSO is discrete in nature
-    this.position.zeroOut();
+    this.position.zeroOut();  // TODO make this O(# tasks) instead of O(# tasks * # vms). Would this actually make a noticable difference? Because velocity is  O(# tasks * # vms)
 
     for (int i = 0; i < this.velocity.getRows(); i++) {
       int j = this.velocity.getIndexOfMaximumColumnForRow(i);
@@ -118,7 +117,7 @@ public class Particle {
     return this.velocity;
   }
 
-  public HashMap<Task,VirtualMachine> getTaskVmMapping() {
+  private void updateTaskVmMapping() {
     this.taskVmMapping.clear();
 
     for (int i = 0; i < this.position.getRows(); i++) {
@@ -126,7 +125,10 @@ public class Particle {
       VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.position.getIndexOfFirstNonZeroColumnForRow(i));
       this.taskVmMapping.put(task, virtualMachine);
     }
+  }
 
+  public HashMap<Task,VirtualMachine> getTaskVmMapping() {
+    this.updateTaskVmMapping();
     return this.taskVmMapping;
   }
 
@@ -134,7 +136,11 @@ public class Particle {
     this.globalBestPosition = globalBestPosition;
   }
 
-  public void setGlobalBestObjectiveValue(double globalBestObjectiveValue) {
-    this.globalBestObjectiveValue = globalBestObjectiveValue;
+  public Matrix getPersonalBestPosition() {
+    return this.personalBestPosition;
+  }
+
+  public double getPersonalBestObjectiveValue() {
+    return this.personalBestObjectiveValue;
   }
 }

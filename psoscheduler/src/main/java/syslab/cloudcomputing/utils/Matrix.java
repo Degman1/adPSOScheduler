@@ -83,16 +83,12 @@ public class Matrix {
     if (otherPosition.mtx.length == this.mtx.length && 
         otherPosition.mtx.length > 0 && 
         otherPosition.mtx.length == this.mtx.length) {
-
-      Matrix mtxCopy = this.copy();
-
       for (int i = 0; i < this.getRows(); i++) {
         for (int j = 0; j < this.getColumns(); j++) {
-          mtxCopy.setComponent(i, j, binaryOperation.operate(this.mtx[i][j], otherPosition.mtx[i][j]));
+          this.setComponent(i, j, binaryOperation.operate(this.mtx[i][j], otherPosition.mtx[i][j]));
         }
       }
-
-      return mtxCopy;
+      return this;
     }
 
     return null;
@@ -115,15 +111,12 @@ public class Matrix {
   }
 
   private Matrix operate(double constant, BinaryOperation binaryOperation) {
-    Matrix mtxCopy = this.copy();
-
     for (int i = 0; i < this.getRows(); i++) {
       for (int j = 0; j < this.getColumns(); j++) {
-        mtxCopy.setComponent(i, j, binaryOperation.operate(this.mtx[i][j], constant));
+        this.setComponent(i, j, binaryOperation.operate(this.mtx[i][j], constant));
       }
     }
-
-    return mtxCopy;
+    return this;
   }
 
   public Matrix add(double constant) {
