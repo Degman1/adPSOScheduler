@@ -42,12 +42,27 @@ public class Particle {
     this.id = Particle.idCounter++;
     this.workload = workload;
     this.dataCenter = dataCenter;
-    randomInitialization();
+    this.randomInitialization();
   }
 
   // Returns true is this iteration was a success (ie. it acheived a new personal best)
   public Boolean runIteration() {
-    // TODO
+    
+    // Randomize constants r1 and r2
+    double r1 = Math.random();
+    double r2 = Math.random();
+
+    this.updateVelocity(r1, r2);
+    this.updatePosition();
+
+    this.updateDataCenter();
+
+    if (this.dataCenter.computeObjective() > this.personalBestObjectiveValue) {
+      this.personalBestPosition = this.position;
+      this.personalBestObjectiveValue = dataCenter.computeObjective();
+      return true;
+    }
+
     return false;
   }
 
@@ -63,7 +78,7 @@ public class Particle {
     // Must compute the local best after building the task to vm mapping in the line above for accurate
     // objective function computation
     this.personalBestPosition = this.position;
-    this.personalBestObjectiveValue = dataCenter.computeObjective();
+    this.personalBestObjectiveValue = this.dataCenter.computeObjective();
   }
 
   private void updateDataCenter() {
