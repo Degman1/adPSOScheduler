@@ -1,5 +1,7 @@
 package syslab.cloudcomputing.utils;
 
+import java.util.Arrays;
+
 public class Matrix {
   private static BinaryOperation addition = (x, y) -> x + y;
   private static BinaryOperation subtraction = (x, y) -> x - y;
@@ -22,7 +24,7 @@ public class Matrix {
     }
   }
 
-  private void setComponent(int row, int column, double value) {
+  public void setComponent(int row, int column, double value) {
     this.mtx[row][column] = value;
   }
 
@@ -44,6 +46,26 @@ public class Matrix {
       }
     }
     return -1;
+  }
+
+  public int getIndexOfMaximumColumnForRow(int row) {
+    int maxIndex = 0;
+    double maxValue = this.mtx[row][0];
+
+    for (int col = 1; col < this.getColumns(); col++) {
+      if (this.mtx[row][col] > maxValue) {
+        maxIndex = col;
+        maxValue = this.mtx[row][col];
+      }
+    }
+
+    return maxIndex;
+  }
+
+  public void zeroOut() {
+    for (int i = 0; i < this.getRows(); i++) {
+      Arrays.fill(this.mtx[i], 0.0);
+    }
   }
 
   public Matrix copy() {

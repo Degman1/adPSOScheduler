@@ -77,16 +77,21 @@ public class Particle {
   }
 
   private void updateVelocity(double r1, double r2) {
-    this.velocity = this.velocity.multiply(Particle.w);
+    Matrix previousVelocityFactor = this.velocity.multiply(Particle.w);
     Matrix localExploration = this.personalBestPosition.subtract(this.position).multiply(Particle.c1).multiply(r1);
     Matrix globalExploration = this.globalBestPosition.subtract(this.position).multiply(Particle.c2).multiply(r2);
-    this.velocity.add(localExploration).add(globalExploration);
+    this.velocity = previousVelocityFactor.add(localExploration).add(globalExploration);
   }
 
   private void updatePosition() {
     // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
     // Because this version of PSO is discrete in nature
-    // TODO
+    this.position.zeroOut();
+
+    for (int i = 0; i < this.velocity.getRows(); i++) {
+      int j = this.velocity.getIndexOfMaximumColumnForRow(i);
+      this.position.setComponent(i, j, 1);
+    }
   }
 
   public int getId() {
