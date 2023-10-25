@@ -18,8 +18,6 @@ public class Particle {
   final static double c1 = 2.0;
   final static double c2 = 1.49455;
 
-  private static double w;
-
   private static int idCounter = 1;
 	private int id;
 
@@ -46,13 +44,13 @@ public class Particle {
   }
 
   // Returns true is this iteration was a success (ie. it acheived a new personal best)
-  public Boolean runIteration() {
+  public int runIteration(double w) {
     
     // Randomize constants r1 and r2
     double r1 = Math.random();
     double r2 = Math.random();
 
-    this.updateVelocity(r1, r2);
+    this.updateVelocity(r1, r2, w);
     this.updatePosition();
 
     this.updateDataCenter();
@@ -60,10 +58,10 @@ public class Particle {
     if (this.dataCenter.computeObjective() > this.personalBestObjectiveValue) {
       this.personalBestPosition = this.position;
       this.personalBestObjectiveValue = dataCenter.computeObjective();
-      return true;
+      return 1;
     }
 
-    return false;
+    return 0;
   }
 
   private void randomInitialization() {
@@ -72,7 +70,6 @@ public class Particle {
 
     this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
 
-    // Build the Task to VirtualMachine mapping based on a randomly generated position
     updateDataCenter();
 
     // Must compute the local best after building the task to vm mapping in the line above for accurate
@@ -91,7 +88,7 @@ public class Particle {
     }
   }
 
-  private void updateVelocity(double r1, double r2) {
+  private void updateVelocity(double r1, double r2, double w) {
     Matrix previousVelocityFactor = this.velocity.multiply(Particle.w);
     Matrix localExploration = this.personalBestPosition.subtract(this.position).multiply(Particle.c1).multiply(r1);
     Matrix globalExploration = this.globalBestPosition.subtract(this.position).multiply(Particle.c2).multiply(r2);
@@ -139,13 +136,5 @@ public class Particle {
 
   public void setGlobalBestObjectiveValue(double globalBestObjectiveValue) {
     this.globalBestObjectiveValue = globalBestObjectiveValue;
-  }
- 
-  public static void setW(double w) {
-    Particle.w = w;
-  }
-
-  public static double getW() {
-    return Particle.w;
   }
 }
