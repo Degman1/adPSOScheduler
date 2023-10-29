@@ -12,6 +12,8 @@ public class Matrix {
   private int columns;
 
   public Matrix(int rows, int columns) {
+    this.rows = rows;
+    this.columns = columns;
     this.mtx = new double[rows][columns];
   }
 
@@ -19,7 +21,7 @@ public class Matrix {
   public void randomPositionInitialization() {
     for (int i = 0; i < this.mtx.length; i++) {
       int j = Utilities.getRandomInteger(0, this.getColumns());
-      this.mtx[i][j] = Utilities.getRandomInteger(0, 1);
+      this.mtx[i][j] = 1;
     }
   }
 
@@ -39,11 +41,14 @@ public class Matrix {
   }
 
   public int getIndexOfFirstNonZeroColumnForRow(int row) {
-    for (int col = 0; col < this.getColumns(); col++) {
+    System.out.println(this.toString());
+    int col;
+    for (col = 0; col < this.getColumns(); col++) {
       if (this.mtx[row][col] == 1) {
         return col;
       }
     }
+    System.out.println("ERROR: No value of 1 was found in column " + col + " of matrix -> task not assigned to any VM in previous iteration");
     return -1;
   }
 
@@ -120,5 +125,14 @@ public class Matrix {
 
   public int getColumns() {
     return this.columns;
+  }
+
+  @Override
+  public String toString() {
+    String desc = "[";
+    for (double[] row : this.mtx) {
+      desc += Arrays.toString(row);
+    }
+    return desc + "]";
   }
 }

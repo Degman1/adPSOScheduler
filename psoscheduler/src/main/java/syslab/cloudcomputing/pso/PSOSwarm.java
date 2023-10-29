@@ -19,26 +19,26 @@ public class PSOSwarm {
 
   private double w;
 
-  private Matrix globalBestPosition;
-  private double globalBestObjectiveValue = 0;
-  private HashMap<Task, VirtualMachine> globalBestTaskVmMapping = new HashMap<Task, VirtualMachine>();
+  public Matrix globalBestPosition;
+  public double globalBestObjectiveValue = 0;
+  public HashMap<Task, VirtualMachine> globalBestTaskVmMapping = new HashMap<Task, VirtualMachine>();
 
   private ArrayList<Particle> particles;
 
   private Workload workload;
   private DataCenter dataCenter;
 
-  public PSOSwarm(DataCenter dataCenter, Workload workload, int nParticles, int minPosition, int maxPosition, int maxAbsoluteVelocity) {
+  public PSOSwarm(DataCenter dataCenter, Workload workload, int nParticles, int maxAbsoluteVelocity) {
     this.dataCenter = dataCenter;
     this.workload = workload;
     this.initializeSwarm(nParticles);
   }
 
   private void initializeSwarm(int nParticles) {
-    ArrayList<Particle> particles = new ArrayList<Particle>();
+    this.particles = new ArrayList<Particle>();
     for (int i = 0; i < nParticles; i++) {
       Particle particle = new Particle(this.dataCenter, this.workload);
-      particles.add(particle);
+      this.particles.add(particle);
     }
 
     this.findGlobalBest();
@@ -98,7 +98,6 @@ public class PSOSwarm {
       }
     }
 
-    // TODO just give each particle a reference to its swarm so this doesn't need to happen
     // If a new best was found, tell each of the particles
     if (newBest == true) {
       for (Particle p : this.particles) {

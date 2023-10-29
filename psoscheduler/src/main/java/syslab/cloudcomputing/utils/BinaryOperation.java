@@ -1,4 +1,4 @@
-package syslab.cloudcomputing;
+package syslab.cloudcomputing.utils;
 
 @FunctionalInterface
 public interface BinaryOperation {

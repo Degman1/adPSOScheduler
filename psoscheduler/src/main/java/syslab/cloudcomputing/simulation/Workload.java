@@ -21,7 +21,7 @@ public class Workload {
   }
 
   public Task getTaskById(int id) {
-    if (id > 0 && id <= taskId) {
+    if (id >= 0 && id <= taskId) {
       return this.tasks.get(id);
     }
     
@@ -31,4 +31,11 @@ public class Workload {
   public int getTaskCount() {
     return this.tasks.size();
   }
+
+
+  @Override
+  public String toString() {
+    return "{ Workload: " + tasks + " }";
+  }
+
 }

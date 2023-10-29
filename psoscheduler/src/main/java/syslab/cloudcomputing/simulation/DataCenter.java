@@ -23,11 +23,15 @@ public class DataCenter {
   public DataCenter(ArrayList<VirtualMachine> virtualMachines) {
     this.virtualMachines = virtualMachines;
     this.virtualMachineReadyTime = new HashMap<VirtualMachine, Double>();
+    for (VirtualMachine vm : virtualMachines) {
+      this.virtualMachineReadyTime.put(vm, 0.0);
+    }
   }
 
   public void addVirtualMachine(VirtualMachine virtualMachine) {
     virtualMachine.setDataCenterId(dcVirtualMachineId);
     this.virtualMachines.add(virtualMachine);
+    this.virtualMachineReadyTime.put(virtualMachine, 0.0);
   }
 
   public VirtualMachine getVirtualMachineById(int id) {
@@ -86,4 +90,13 @@ public class DataCenter {
   public int getVirtualMachineCount() {
     return this.virtualMachines.size();
   }
+
+  @Override
+  public String toString() {
+    String desc = "{ DataCenter: Machine Count = " + this.virtualMachines.size();
+    desc += "; Task Load Count = " + this.taskCount;
+    desc += "; Ready Time = " + this.virtualMachineReadyTime + " }";
+    return desc;
+  }
+
 }

@@ -25,7 +25,7 @@ public class VirtualMachine {
 	}
 
   public String toString() {
-    return String.format("(VM%i: %imips)", this.id, this.millionsOfInstructionsPerSecond);
+    return String.format("(VM%d: %d mips)", this.id, this.millionsOfInstructionsPerSecond);
   }
 
   public int getId() {

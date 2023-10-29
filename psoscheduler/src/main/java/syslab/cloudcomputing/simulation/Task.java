@@ -25,7 +25,7 @@ public class Task {
 	}
 
   public String toString() {
-    return String.format("(TSK%i: %imips)", this.id, this.millionsOfInstructions);
+    return String.format("(TSK%d: %d mips)", this.id, this.millionsOfInstructions);
   }
 
   public int getId() {
@@ -42,5 +42,5 @@ public class Task {
 
 	public void setWorkloadId(int id) {
 		this.workloadId = id;
-	}
+	}	
 }
