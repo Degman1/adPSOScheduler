@@ -21,7 +21,7 @@ public class Workload {
   }
 
   public Task getTaskById(int id) {
-    if (id >= 0 && id <= taskId) {
+    if (id >= 0 && id < this.tasks.size()) {
       return this.tasks.get(id);
     }
     

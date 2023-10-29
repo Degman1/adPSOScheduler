@@ -9,9 +9,8 @@ import syslab.cloudcomputing.simulation.*;
 public class Scheduler {
     public static void main(String[] args) {
         int nVms = 1;
-        int nTasks = 1;
+        int nTasks = 3;
         int nParticles = 1;
-        int maxAbsoluteVelocity = 5;
 
         ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
 
@@ -32,7 +31,12 @@ public class Scheduler {
         System.out.println(dataCenter);
         System.out.println(workload);
 
-        PSOSwarm swarm = new PSOSwarm(dataCenter, workload, nParticles, maxAbsoluteVelocity);
+        PSOSwarm swarm = new PSOSwarm(dataCenter, workload, nParticles);
+        System.out.println("Init results:");
+        System.out.println(swarm.globalBestPosition);
+        System.out.println("Makespan:" + dataCenter.computeMakespan());
+        System.out.println("Throughput:" + dataCenter.computeThroughput());
+        System.out.println(swarm.globalBestObjectiveValue);
         System.out.println(swarm.globalBestTaskVmMapping);
         // HashMap<Task, VirtualMachine> finalMapping = swarm.runPSOAlgorithm();
 

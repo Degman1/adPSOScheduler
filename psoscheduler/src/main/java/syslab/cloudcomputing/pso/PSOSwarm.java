@@ -28,7 +28,7 @@ public class PSOSwarm {
   private Workload workload;
   private DataCenter dataCenter;
 
-  public PSOSwarm(DataCenter dataCenter, Workload workload, int nParticles, int maxAbsoluteVelocity) {
+  public PSOSwarm(DataCenter dataCenter, Workload workload, int nParticles) {
     this.dataCenter = dataCenter;
     this.workload = workload;
     this.initializeSwarm(nParticles);
@@ -42,6 +42,8 @@ public class PSOSwarm {
     }
 
     this.findGlobalBest();
+    // TODO remove the below
+    this.getGlobalBestTaskVmMapping();
   }
 
   private void updateTaskVmMapping() {

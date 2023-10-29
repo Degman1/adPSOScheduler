@@ -70,17 +70,17 @@ public class DataCenter {
 	}
 
   public double computeMakespan() {
-    double makespan = 0.0;
+    double maxMakespan = 0.0;
 		
 		// Makespan is defined as the maximum completion time over all VMs
 		for (Map.Entry<VirtualMachine, Double> entry : this.virtualMachineReadyTime.entrySet()) {
       double completionTime = entry.getValue();
-      if (completionTime > makespan) {
-				makespan = completionTime;
+      if (completionTime > maxMakespan) {
+        maxMakespan = completionTime;
 			}
-    } 
+    }
 
-    return makespan;
+    return maxMakespan;
   }
 
   public double computeThroughput() {
@@ -89,6 +89,10 @@ public class DataCenter {
 
   public int getVirtualMachineCount() {
     return this.virtualMachines.size();
+  }
+
+  public int getTaskCount() {
+    return this.taskCount;
   }
 
   @Override

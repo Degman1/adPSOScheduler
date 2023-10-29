@@ -41,7 +41,6 @@ public class Matrix {
   }
 
   public int getIndexOfFirstNonZeroColumnForRow(int row) {
-    System.out.println(this.toString());
     int col;
     for (col = 0; col < this.getColumns(); col++) {
       if (this.mtx[row][col] == 1) {
@@ -130,8 +129,14 @@ public class Matrix {
   @Override
   public String toString() {
     String desc = "[";
-    for (double[] row : this.mtx) {
-      desc += Arrays.toString(row);
+    for (int i = 0; i < this.mtx.length; i++) {
+      if (i > 0) {
+        desc += " ";
+      }
+      desc += Arrays.toString(this.mtx[i]);
+      if (i < this.mtx.length - 1) {
+        desc += "\n";
+      }
     }
     return desc + "]";
   }
