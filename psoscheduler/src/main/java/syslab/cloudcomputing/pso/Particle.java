@@ -18,7 +18,7 @@ public class Particle {
   final static double c1 = 2.0;
   final static double c2 = 1.49455;
 
-  final static double maxAbsoluteVelocity = 10.0;
+  final static double maxAbsoluteVelocity = 10.0; // TODO what value to put in here
 
   private static int idCounter = 1;
 	private int id;
@@ -52,19 +52,20 @@ public class Particle {
 
     this.updateDataCenter();
     double objective = this.dataCenter.computeObjective();
-    System.out.println(this.dataCenter);
-    System.out.println(objective);
+    // System.out.println(this.dataCenter);
+    // System.out.println(objective);
 
     if (objective > this.personalBestObjectiveValue) {
-      System.out.println("BETTER POSITION");
+      // System.out.println("BETTER POSITION");
       this.personalBestPosition = this.position.copy();
       this.personalBestObjectiveValue = objective;
       return 1;
-    } else if (objective < this.personalBestObjectiveValue){
-      System.out.println("WORSE POSITION");
-    } else {
-      System.out.println("SAME POSITION");
     }
+    // } else if (objective < this.personalBestObjectiveValue){
+    //   System.out.println("WORSE POSITION");
+    // } else {
+    //   System.out.println("SAME POSITION");
+    // }
 
     return 0;
   }
@@ -82,7 +83,7 @@ public class Particle {
     // objective function computation
     this.personalBestPosition = this.position;
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
-    System.out.println(this.position);
+    // System.out.println(this.position);
   }
 
   private void updateDataCenter() {
@@ -100,26 +101,26 @@ public class Particle {
     double r1 = Math.random();
     double r2 = Math.random();
 
-    System.out.println("\nParticle " + this.id + " Velocity (before): " + this.velocity);
+    // System.out.println("\nParticle " + this.id + " Velocity (before): " + this.velocity);
     Matrix previousVelocityFactor = this.velocity.copy().multiply(w);
     Matrix localExploration = this.personalBestPosition.copy().subtract(this.position).multiply(Particle.c1).multiply(r1);
     Matrix globalExploration = this.globalBestPosition.copy().subtract(this.position).multiply(Particle.c2).multiply(r2);
     this.velocity = previousVelocityFactor.add(localExploration).add(globalExploration)
                                           .enforceElementwiseBound(Particle.maxAbsoluteVelocity);
-    System.out.println("Particle " + this.id + " Velocity (after): " + this.velocity);
+    // System.out.println("Particle " + this.id + " Velocity (after): " + this.velocity);
   }
 
   private void updatePosition() {
     // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
     // Because this version of PSO is discrete in nature
-    System.out.println("\nParticle " + this.id + " Position (before): " + this.position);
+    // System.out.println("\nParticle " + this.id + " Position (before): " + this.position);
     this.position.zeroOut();  // TODO make this O(# tasks) instead of O(# tasks * # vms). Would this actually make a noticable difference? Because velocity is  O(# tasks * # vms)
 
     for (int i = 0; i < this.velocity.getRowsCount(); i++) {
       int j = this.velocity.getIndexOfMaximumColumnForRow(i);
       this.position.setComponent(i, j, 1);
     }
-    System.out.println("Particle " + this.id + " Position (after): " + this.position);
+    // System.out.println("Particle " + this.id + " Position (after): " + this.position);
   }
 
   public int getId() {

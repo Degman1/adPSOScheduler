@@ -13,8 +13,7 @@ public class PSOSwarm {
   private final double w1 = 0.9;
   private final double w2 = 0.4;
 
-  private final int maxIterations = 200; // TODO make this 200
-
+  private final int maxIterations = 200;
   private double p_s = 1.0;
 
   private double w;
@@ -59,6 +58,22 @@ public class PSOSwarm {
   public HashMap<Task,VirtualMachine> getGlobalBestTaskVmMapping() {
     this.updateTaskVmMapping();
     return this.globalBestTaskVmMapping;
+  }
+
+  public static Result runRepeatedPSOAlgorithm(DataCenter dataCenter, Workload workload, int nParticles) {
+    HashMap<Task, VirtualMachine> bestMapping = new HashMap<Task, VirtualMachine>();
+    double maxObjective = -1;
+
+    for (int i = 0; i < 5; i++) {
+      PSOSwarm swarm = new PSOSwarm(dataCenter, workload, nParticles);
+      HashMap<Task, VirtualMachine> mapping = swarm.runPSOAlgorithm();
+      if (swarm.globalBestObjectiveValue > maxObjective) {
+        maxObjective = swarm.globalBestObjectiveValue;
+        bestMapping = mapping;
+      }
+    }
+
+    return new Result(maxObjective, bestMapping);
   }
 
   public HashMap<Task, VirtualMachine> runPSOAlgorithm() {

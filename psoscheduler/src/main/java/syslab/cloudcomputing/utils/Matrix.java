@@ -101,7 +101,7 @@ public class Matrix {
     for (int i = 0; i < this.getRowsCount(); i++) {
       for (int j = 0; j < this.getColumnCount(); j++) {
         if (Math.abs(this.mtx[i][j]) > maxAbsoluteValue) {
-          System.out.println("************************ HIT BOUND, RANDOMIZING!");
+          // System.out.println("************************ HIT BOUND, RANDOMIZING!");
           this.mtx[i][j] = Utilities.getRandomDouble(0, maxAbsoluteValue);
         }
       }
