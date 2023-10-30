@@ -13,7 +13,7 @@ public class PSOSwarm {
   private final double w1 = 0.9;
   private final double w2 = 0.4;
 
-  private final int maxIterations = 200;
+  private final int maxIterations = 200; // TODO make this 200
 
   private double p_s = 1.0;
 
@@ -42,14 +42,14 @@ public class PSOSwarm {
     }
 
     this.findGlobalBest();
-    // TODO remove the below
+    // TODO remove the below line when benchmarking
     this.getGlobalBestTaskVmMapping();
   }
 
   private void updateTaskVmMapping() {
     this.globalBestTaskVmMapping.clear();
 
-    for (int i = 0; i < this.globalBestPosition.getRows(); i++) {
+    for (int i = 0; i < this.globalBestPosition.getRowsCount(); i++) {
       Task task = workload.getTaskById(i);
       VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.globalBestPosition.getIndexOfFirstNonZeroColumnForRow(i));
       this.globalBestTaskVmMapping.put(task, virtualMachine);
@@ -70,7 +70,8 @@ public class PSOSwarm {
   }
 
   private void runIteration(int iteration) {
-    w = ((this.w1 - this.w2) / p_s) + ((this.maxIterations - iteration) / this.maxIterations) * ((this.w1 - (this.w1 - this.w2)) / p_s);
+    w = ((this.w1 - this.w2) / this.p_s) + ((this.maxIterations - (double) iteration) / this.maxIterations) * ((this.w1 - (this.w1 - this.w2)) / this.p_s);
+
     int ss = 0;
 
     for (Particle p : this.particles) {
@@ -95,7 +96,7 @@ public class PSOSwarm {
     for (Particle p : this.particles) {
       if (p.getPersonalBestObjectiveValue() > this.globalBestObjectiveValue) {
         this.globalBestObjectiveValue = p.getPersonalBestObjectiveValue();
-        this.globalBestPosition = p.getPersonalBestPosition();
+        this.globalBestPosition = p.getPersonalBestPosition().copy();
         newBest = true;
       }
     }

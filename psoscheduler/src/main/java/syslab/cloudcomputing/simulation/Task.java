@@ -25,7 +25,7 @@ public class Task {
 	}
 
   public String toString() {
-    return String.format("(TSK%d: %d mips)", this.id, this.millionsOfInstructions);
+    return String.format("(TSK%d: %d mi)", this.id, this.millionsOfInstructions);
   }
 
   public int getId() {

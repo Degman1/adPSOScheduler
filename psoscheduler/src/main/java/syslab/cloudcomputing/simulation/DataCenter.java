@@ -40,7 +40,7 @@ public class DataCenter {
 
   public void resetVirtualMachineReadyTimes() {
     this.virtualMachineReadyTime.clear();
-    for (VirtualMachine virtualMachine : virtualMachines) {
+    for (VirtualMachine virtualMachine : this.virtualMachines) {
       this.virtualMachineReadyTime.put(virtualMachine, 0.0);
     }
     this.taskCount = 0;

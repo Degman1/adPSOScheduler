@@ -20,7 +20,7 @@ public class Matrix {
   // This init is used to randomly populate the matrix values to act as particle positions
   public void randomPositionInitialization() {
     for (int i = 0; i < this.mtx.length; i++) {
-      int j = Utilities.getRandomInteger(0, this.getColumns());
+      int j = Utilities.getRandomInteger(0, this.getColumnCount());
       this.mtx[i][j] = 1;
     }
   }
@@ -33,8 +33,8 @@ public class Matrix {
   // Init velocities to zero: https://ieeexplore.ieee.org/document/6256112
   // NOTE this could have a big impact on convergence speed: https://www.hindawi.com/journals/cin/2021/6628889/
   public void randomVelocityInitialization(double randomMin, double randomMax) {
-    for (int i = 0; i < this.getRows(); i++) {
-      for (int j = 0; j < this.getColumns(); j++) {
+    for (int i = 0; i < this.getRowsCount(); i++) {
+      for (int j = 0; j < this.getColumnCount(); j++) {
         this.mtx[i][j] = Utilities.getRandomDouble(randomMin, randomMax);
       }
     }
@@ -42,7 +42,7 @@ public class Matrix {
 
   public int getIndexOfFirstNonZeroColumnForRow(int row) {
     int col;
-    for (col = 0; col < this.getColumns(); col++) {
+    for (col = 0; col < this.getColumnCount(); col++) {
       if (this.mtx[row][col] == 1) {
         return col;
       }
@@ -55,7 +55,7 @@ public class Matrix {
     int maxIndex = 0;
     double maxValue = this.mtx[row][0];
 
-    for (int col = 1; col < this.getColumns(); col++) {
+    for (int col = 1; col < this.getColumnCount(); col++) {
       if (this.mtx[row][col] > maxValue) {
         maxIndex = col;
         maxValue = this.mtx[row][col];
@@ -66,7 +66,7 @@ public class Matrix {
   }
 
   public void zeroOut() {
-    for (int i = 0; i < this.getRows(); i++) {
+    for (int i = 0; i < this.getRowsCount(); i++) {
       Arrays.fill(this.mtx[i], 0.0);
     }
   }
@@ -86,8 +86,8 @@ public class Matrix {
     if (otherPosition.mtx.length == this.mtx.length && 
         otherPosition.mtx.length > 0 && 
         otherPosition.mtx.length == this.mtx.length) {
-      for (int i = 0; i < this.getRows(); i++) {
-        for (int j = 0; j < this.getColumns(); j++) {
+      for (int i = 0; i < this.getRowsCount(); i++) {
+        for (int j = 0; j < this.getColumnCount(); j++) {
           this.setComponent(i, j, binaryOperation.operate(this.mtx[i][j], otherPosition.mtx[i][j]));
         }
       }
@@ -95,6 +95,19 @@ public class Matrix {
     }
 
     return null;
+  }
+
+  public Matrix enforceElementwiseBound(double maxAbsoluteValue) {
+    for (int i = 0; i < this.getRowsCount(); i++) {
+      for (int j = 0; j < this.getColumnCount(); j++) {
+        if (Math.abs(this.mtx[i][j]) > maxAbsoluteValue) {
+          System.out.println("************************ HIT BOUND, RANDOMIZING!");
+          this.mtx[i][j] = Utilities.getRandomDouble(0, maxAbsoluteValue);
+        }
+      }
+    }
+
+    return this;
   }
 
   public Matrix add(Matrix otherPosition) {
@@ -106,8 +119,8 @@ public class Matrix {
   }
 
   private Matrix operate(double constant, BinaryOperation binaryOperation) {
-    for (int i = 0; i < this.getRows(); i++) {
-      for (int j = 0; j < this.getColumns(); j++) {
+    for (int i = 0; i < this.getRowsCount(); i++) {
+      for (int j = 0; j < this.getColumnCount(); j++) {
         this.setComponent(i, j, binaryOperation.operate(this.mtx[i][j], constant));
       }
     }
@@ -118,11 +131,11 @@ public class Matrix {
     return this.operate(constant, Matrix.multilpication);
   }
 
-  public int getRows() {
+  public int getRowsCount() {
     return this.rows;
   }
 
-  public int getColumns() {
+  public int getColumnCount() {
     return this.columns;
   }
 
