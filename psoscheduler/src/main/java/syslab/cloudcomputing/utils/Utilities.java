@@ -31,9 +31,13 @@ public class Utilities {
 		String output = "";
 
 		for (ArrayList<Double> history : costHistories) {
-			for (Double cost : history) {
-				output += cost + " ";
+			for (int i = 0; i < history.size(); i++) {
+				output += history.get(i);
+				if (i < history.size() - 1) {
+					output += '\t';
+				}
 			}
+
 			output += "\n";
 		}
 
