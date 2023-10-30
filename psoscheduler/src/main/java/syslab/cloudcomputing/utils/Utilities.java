@@ -1,5 +1,10 @@
 package syslab.cloudcomputing.utils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Utilities {
@@ -20,5 +25,24 @@ public class Utilities {
 	 */
 	public static Double getRandomDouble(double min, double max) {
 		return Math.random() * (max - min) + min;
+	}
+
+	public static void writeCostHistoryToCSV(ArrayList<ArrayList<Double>> costHistories, String path) {
+		String output = "";
+
+		for (ArrayList<Double> history : costHistories) {
+			for (Double cost : history) {
+				output += cost + " ";
+			}
+			output += "\n";
+		}
+
+		Path _path = Paths.get(path);
+
+		try {
+			Files.write(_path, output.getBytes());
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 }

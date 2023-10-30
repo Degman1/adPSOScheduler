@@ -14,12 +14,17 @@ public class PSOSwarm {
   private final double w2 = 0.4;
 
   private final int maxIterations = 200;
+  private static final int nSwarms = 5;
+  private static final int nParticles = 20;
+
   private double p_s = 1.0;
 
   private double w;
 
   public Matrix globalBestPosition;
   public double globalBestObjectiveValue = 0;
+  private ArrayList<Double> costHistory = new ArrayList<Double>();
+
   public HashMap<Task, VirtualMachine> globalBestTaskVmMapping = new HashMap<Task, VirtualMachine>();
 
   private ArrayList<Particle> particles;
@@ -27,10 +32,10 @@ public class PSOSwarm {
   private Workload workload;
   private DataCenter dataCenter;
 
-  public PSOSwarm(DataCenter dataCenter, Workload workload, int nParticles) {
+  public PSOSwarm(DataCenter dataCenter, Workload workload) {
     this.dataCenter = dataCenter;
     this.workload = workload;
-    this.initializeSwarm(nParticles);
+    this.initializeSwarm(PSOSwarm.nParticles);
   }
 
   private void initializeSwarm(int nParticles) {
@@ -42,7 +47,7 @@ public class PSOSwarm {
 
     this.findGlobalBest();
     // TODO remove the below line when benchmarking
-    this.getGlobalBestTaskVmMapping();
+    // this.getGlobalBestTaskVmMapping();
   }
 
   private void updateTaskVmMapping() {
@@ -60,12 +65,14 @@ public class PSOSwarm {
     return this.globalBestTaskVmMapping;
   }
 
-  public static Result runRepeatedPSOAlgorithm(DataCenter dataCenter, Workload workload, int nParticles) {
+  public static Result runRepeatedPSOAlgorithm(DataCenter dataCenter, Workload workload) {
     HashMap<Task, VirtualMachine> bestMapping = new HashMap<Task, VirtualMachine>();
     double maxObjective = -1;
+    PSOSwarm[] swarms = new PSOSwarm[PSOSwarm.nSwarms];
 
-    for (int i = 0; i < 5; i++) {
-      PSOSwarm swarm = new PSOSwarm(dataCenter, workload, nParticles);
+    for (int i = 0; i < PSOSwarm.nSwarms; i++) {
+      PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
+      swarms[i] = swarm;
       HashMap<Task, VirtualMachine> mapping = swarm.runPSOAlgorithm();
       if (swarm.globalBestObjectiveValue > maxObjective) {
         maxObjective = swarm.globalBestObjectiveValue;
@@ -73,7 +80,7 @@ public class PSOSwarm {
       }
     }
 
-    return new Result(maxObjective, bestMapping);
+    return new Result(swarms, maxObjective, bestMapping);
   }
 
   public HashMap<Task, VirtualMachine> runPSOAlgorithm() {
@@ -94,6 +101,8 @@ public class PSOSwarm {
     }
 
     this.findGlobalBest();
+
+    this.costHistory.add(this.globalBestObjectiveValue);
     
     this.p_s = ss / (double) this.getNumberParticles();
 
@@ -126,5 +135,15 @@ public class PSOSwarm {
 
   public int getNumberParticles() {
     return this.particles.size();
+  }
+
+  public ArrayList<ArrayList<Double>> getParticleObjectiveHistory() {
+    ArrayList<ArrayList<Double>> history = new ArrayList<ArrayList<Double>>();
+
+    for (Particle p : this.particles) {
+      history.add(p.getCostHistory());
+    }
+
+    return history;
   }
 }

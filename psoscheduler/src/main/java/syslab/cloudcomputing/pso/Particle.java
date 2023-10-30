@@ -1,5 +1,6 @@
 package syslab.cloudcomputing.pso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import syslab.cloudcomputing.simulation.DataCenter;
@@ -32,6 +33,8 @@ public class Particle {
   private Matrix personalBestPosition;
   private double personalBestObjectiveValue;
 
+  private ArrayList<Double> costHistory = new ArrayList<Double>();
+
   private Matrix globalBestPosition;
 
   private Workload workload;
@@ -54,6 +57,8 @@ public class Particle {
     double objective = this.dataCenter.computeObjective();
     // System.out.println(this.dataCenter);
     // System.out.println(objective);
+
+    this.costHistory.add(this.personalBestObjectiveValue);
 
     if (objective > this.personalBestObjectiveValue) {
       // System.out.println("BETTER POSITION");
@@ -160,6 +165,10 @@ public class Particle {
 
   public double getPersonalBestObjectiveValue() {
     return this.personalBestObjectiveValue;
+  }
+
+  public ArrayList<Double> getCostHistory() {
+    return this.costHistory;
   }
 
   @Override

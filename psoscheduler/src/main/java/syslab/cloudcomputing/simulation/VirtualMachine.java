@@ -43,4 +43,8 @@ public class VirtualMachine {
 	public void setDataCenterId(int dataCenterId) {
 		this.dataCenterId = dataCenterId;
 	}
+
+	public void setMillionsOfInstructionsPerSecond(int millionsOfInstructionsPerSecond) {
+		this.millionsOfInstructionsPerSecond = millionsOfInstructionsPerSecond;
+	}
 }
