@@ -9,6 +9,51 @@ import syslab.cloudcomputing.pso.Result;
 import syslab.cloudcomputing.simulation.*;
 
 public class Scheduler {
+    public static void main(String[] args) {
+        DataCenter dataCenter = Scheduler.test6_DataCenter();
+        Workload workload = Scheduler.test6_Workload();
+        
+        System.out.println(dataCenter);
+        System.out.println(workload);
+
+        // Scheduler.runRepeatedTest(dataCenter, workload, 20.0);
+        Scheduler.runSingleTest(dataCenter, workload, true);
+    }
+
+    public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordCostHistory) {
+        PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
+        swarm.runPSOAlgorithm();
+        
+        if (recordCostHistory) {
+            System.out.println("Global Best Position: " + swarm.globalBestPosition);
+            System.out.println("Global Best Cost: " + swarm.globalBestObjectiveValue);
+            System.out.println("Global Best Mapping: " + swarm.globalBestTaskVmMapping);
+            System.out.print("Saving cost history to cost_history.csv... ");
+            
+            ArrayList<ArrayList<Double>> history = swarm.getParticleObjectiveHistory();
+            Utilities.writeCostHistoryToCSV(history, "output_data/cost_history.csv");
+
+            System.out.println("Completed");
+        }
+    }
+
+    // TODO Pupose=benchmarking
+    public static void runRepeatedTest(DataCenter dataCenter, Workload workload, double handCalculatedBest) {
+        int nRetries = 1000;
+
+        Result[] results = new Result[nRetries];
+
+        double success = 0.0;
+        for (int i = 0; i < nRetries; i++) {
+            results[i] = PSOSwarm.runRepeatedPSOAlgorithm(dataCenter, workload);
+            if (results[i].getFinalObjective() >= handCalculatedBest) {
+                success += 1.0;
+            }
+        }
+
+        System.out.println(success / nRetries);
+    }
+
     public static DataCenter test1_DataCenter() {
         ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
         vms.add(new VirtualMachine(100));
@@ -61,48 +106,59 @@ public class Scheduler {
         return Scheduler.test1_Workload();
     }
 
-    public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordCostHistory) {
-        PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
-        swarm.runPSOAlgorithm();
-        
-        if (recordCostHistory) {
-            System.out.println("Global Best Position: " + swarm.globalBestPosition);
-            System.out.println("Global Best Cost: " + swarm.globalBestObjectiveValue);
-            System.out.println("Global Best Mapping: " + swarm.globalBestTaskVmMapping);
-            System.out.print("Saving cost history to cost_history.csv... ");
-            
-            ArrayList<ArrayList<Double>> history = swarm.getParticleObjectiveHistory();
-            Utilities.writeCostHistoryToCSV(history, "output_data/cost_history.csv");
+    public static DataCenter test4_DataCenter() {
+        int nVms = 36;
+        int vmMipsHigh = 100;
+        int vmMipsLow = 20;
 
-            System.out.println("Completed");
-        }
-    }
+        ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
 
-    // TODO Pupose=benchmarking
-    public static void runRepeatedTest(DataCenter dataCenter, Workload workload, double handCalculatedBest) {
-        int nRetries = 1000;
-
-        Result[] results = new Result[nRetries];
-
-        double success = 0.0;
-        for (int i = 0; i < nRetries; i++) {
-            results[i] = PSOSwarm.runRepeatedPSOAlgorithm(dataCenter, workload);
-            if (results[i].getFinalObjective() >= handCalculatedBest) {
-                success += 1.0;
-            }
+        for (int i = 0; i < nVms; i++) {
+            vms.add(new VirtualMachine(Utilities.getRandomInteger(vmMipsLow, vmMipsHigh)));
         }
 
-        System.out.println(success / nRetries);
+        DataCenter dataCenter = new DataCenter(vms);
+        return dataCenter;
     }
 
-    public static void main(String[] args) {
-        DataCenter dataCenter = Scheduler.test3_DataCenter();
-        Workload workload = Scheduler.test3_Workload();
-        
-        System.out.println(dataCenter);
-        System.out.println(workload);
+    public static Workload test4_Workload() {
+        return Scheduler.test1_Workload();
+    }
 
-        // Scheduler.runRepeatedTest(dataCenter, workload, 20.0);
-        Scheduler.runSingleTest(dataCenter, workload, true);
+    public static DataCenter test5_DataCenter() {
+        return Scheduler.test4_DataCenter();
+    }
+
+    public static Workload test5_Workload() {
+        int nTasks = 5;
+        int taskMi = 10;
+
+        ArrayList<Task> tasks = new ArrayList<Task>();
+
+        for (int i = 0; i < nTasks; i++) {
+            tasks.add(new Task(taskMi));
+        }
+        
+        Workload workload = new Workload(tasks);
+        return workload;
+    }
+
+    public static DataCenter test6_DataCenter() {
+        return Scheduler.test4_DataCenter();
+    }
+
+    public static Workload test6_Workload() {
+        int nTasks = 5;
+        int taskMiHigh = 20;
+        int taskMiLow = 5;
+
+        ArrayList<Task> tasks = new ArrayList<Task>();
+
+        for (int i = 0; i < nTasks; i++) {
+            tasks.add(new Task(Utilities.getRandomInteger(taskMiLow, taskMiHigh)));
+        }
+        
+        Workload workload = new Workload(tasks);
+        return workload;
     }
 }

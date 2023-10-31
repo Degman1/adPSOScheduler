@@ -4,12 +4,12 @@ import numpy as np
 
 def plot(particle_histories, path):
   plt.figure(figsize=(8, 5))
-  i = 0
+  i = 1
   for particle_history in particle_histories:
     plt.plot([i for i in range(len(particle_history))], particle_history, linewidth=1.0, label=f"Particle {i}")
     i += 1
 
-  plt.title("adPSO Cost History")
+  plt.title("Test 6: adPSO Cost History")
   plt.xlabel("Iteration")
   plt.ylabel("Cost (Throughput + (1 / Makespan))")
   plt.legend(bbox_to_anchor = (1.25, 0.5), loc='center right')
