@@ -10,8 +10,8 @@ import syslab.cloudcomputing.simulation.*;
 
 public class Scheduler {
     public static void main(String[] args) {
-        DataCenter dataCenter = Scheduler.test7_DataCenter();
-        Workload workload = Scheduler.test7_Workload();
+        DataCenter dataCenter = Scheduler.test8_DataCenter();
+        Workload workload = Scheduler.test8_Workload();
         
         System.out.println(dataCenter);
         System.out.println(workload);
