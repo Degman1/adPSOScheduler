@@ -72,7 +72,7 @@ public class Scheduler {
             System.out.print("Saving cost history to cost_history.csv... ");
             
             ArrayList<ArrayList<Double>> history = swarm.getParticleObjectiveHistory();
-            Utilities.writeCostHistoryToCSV(history, "cost_history.csv");
+            Utilities.writeCostHistoryToCSV(history, "output_data/cost_history.csv");
 
             System.out.println("Completed");
         }

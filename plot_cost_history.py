@@ -1,25 +1,32 @@
 import argparse
-import matplotlib as plt
+import matplotlib.pyplot as plt 
 import numpy as np
 
-def plot(particle_histories):
-  plt.figure()
-
+def plot(particle_histories, path):
+  plt.figure(figsize=(8, 5))
+  i = 0
   for particle_history in particle_histories:
-    plt.plot([i for i in range(particle_history)], particle_history, '-o')
+    plt.plot([i for i in range(len(particle_history))], particle_history, linewidth=1.0, label=f"Particle {i}")
+    i += 1
 
   plt.title("adPSO Cost History")
   plt.xlabel("Iteration")
-  plt.ylabel("Cost (throughput + (1 / makespan))")
+  plt.ylabel("Cost (Throughput + (1 / Makespan))")
+  plt.legend(bbox_to_anchor = (1.25, 0.5), loc='center right')
+  plt.tight_layout()
 
-  plt.show()
+  plt.savefig(path)
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument("--path", default="cost_history.csv", help="path of PSO swarm cost history csv file")
+  parser.add_argument("--data_path", default="output_data/cost_history.csv", help="path of PSO swarm cost history csv file")
+  parser.add_argument("--fname", default="./plots/cost_history.jpg", help="File output name")
   args = parser.parse_args()
 
-  csvData = open(args.path, 'rb')
+  print(f"Plotting cost history data from {args.data_path}... ", end="")
+
+  csvData = open(args.data_path, 'rb')
   data = np.loadtxt(csvData, delimiter='\t')
-  print(data)
-  # plot(data)
+  plot(data, args.fname)
+
+  print(f"Completed (Saved at {args.fname})")
