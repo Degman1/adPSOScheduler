@@ -1,6 +1,5 @@
 package syslab.cloudcomputing.pso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import syslab.cloudcomputing.simulation.Task;

@@ -10,8 +10,8 @@ import syslab.cloudcomputing.simulation.*;
 
 public class Scheduler {
     public static void main(String[] args) {
-        DataCenter dataCenter = Scheduler.test6_DataCenter();
-        Workload workload = Scheduler.test6_Workload();
+        DataCenter dataCenter = Scheduler.test7_DataCenter();
+        Workload workload = Scheduler.test7_Workload();
         
         System.out.println(dataCenter);
         System.out.println(workload);
@@ -149,6 +149,44 @@ public class Scheduler {
 
     public static Workload test6_Workload() {
         int nTasks = 5;
+        int taskMiHigh = 20;
+        int taskMiLow = 5;
+
+        ArrayList<Task> tasks = new ArrayList<Task>();
+
+        for (int i = 0; i < nTasks; i++) {
+            tasks.add(new Task(Utilities.getRandomInteger(taskMiLow, taskMiHigh)));
+        }
+        
+        Workload workload = new Workload(tasks);
+        return workload;
+    }
+
+    public static DataCenter test7_DataCenter() {
+        return Scheduler.test4_DataCenter();
+    }
+
+    public static Workload test7_Workload() {
+        int nTasks = 100;
+        int taskMiHigh = 20;
+        int taskMiLow = 5;
+
+        ArrayList<Task> tasks = new ArrayList<Task>();
+
+        for (int i = 0; i < nTasks; i++) {
+            tasks.add(new Task(Utilities.getRandomInteger(taskMiLow, taskMiHigh)));
+        }
+        
+        Workload workload = new Workload(tasks);
+        return workload;
+    }
+
+     public static DataCenter test8_DataCenter() {
+        return Scheduler.test4_DataCenter();
+    }
+
+    public static Workload test8_Workload() {
+        int nTasks = 500;
         int taskMiHigh = 20;
         int taskMiLow = 5;
 
