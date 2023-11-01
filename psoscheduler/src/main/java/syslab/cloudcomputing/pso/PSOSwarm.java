@@ -23,7 +23,7 @@ public class PSOSwarm {
 
   public Matrix globalBestPosition;
   public double globalBestObjectiveValue = 0;
-  private ArrayList<Double> costHistory = new ArrayList<Double>();
+  private ArrayList<Double> objectiveHistory = new ArrayList<Double>();
 
   public HashMap<Task, VirtualMachine> globalBestTaskVmMapping = new HashMap<Task, VirtualMachine>();
 
@@ -102,7 +102,7 @@ public class PSOSwarm {
 
     this.findGlobalBest();
 
-    this.costHistory.add(this.globalBestObjectiveValue);
+    this.objectiveHistory.add(this.globalBestObjectiveValue);
     
     this.p_s = ss / (double) this.getNumberParticles();
 
