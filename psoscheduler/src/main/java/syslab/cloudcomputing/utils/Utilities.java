@@ -27,10 +27,10 @@ public class Utilities {
 		return Math.random() * (max - min) + min;
 	}
 
-	public static void writeCostHistoryToCSV(ArrayList<ArrayList<Double>> costHistories, String path) {
+	public static void writeObjectiveHistoryToCSV(ArrayList<ArrayList<Double>> objectiveHistories, String path) {
 		String output = "";
 
-		for (ArrayList<Double> history : costHistories) {
+		for (ArrayList<Double> history : objectiveHistories) {
 			for (int i = 0; i < history.size(); i++) {
 				output += history.get(i);
 				if (i < history.size() - 1) {

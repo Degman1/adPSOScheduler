@@ -141,7 +141,7 @@ public class PSOSwarm {
     ArrayList<ArrayList<Double>> history = new ArrayList<ArrayList<Double>>();
 
     for (Particle p : this.particles) {
-      history.add(p.getCostHistory());
+      history.add(p.getObjectiveHistory());
     }
 
     return history;

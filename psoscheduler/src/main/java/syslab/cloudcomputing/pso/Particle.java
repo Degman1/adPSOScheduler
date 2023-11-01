@@ -12,8 +12,7 @@ import syslab.cloudcomputing.utils.Matrix;
 /*
  * Particle represents a complete solution to the optimization problem, meaning a complete 
  * mapping of tasks to virtual machines. Each particle's goal is to move towards the
- * optimized mapping of tasks to virtual machine using the objective function as a measure
- * for cost.
+ * optimized mapping of tasks to virtual machine by maximizing the objective function
  */
 public class Particle {
   final static double c1 = 2.0;
@@ -33,7 +32,7 @@ public class Particle {
   private Matrix personalBestPosition;
   private double personalBestObjectiveValue;
 
-  private ArrayList<Double> costHistory = new ArrayList<Double>();
+  private ArrayList<Double> objectiveHistory = new ArrayList<Double>();
 
   private Matrix globalBestPosition;
 
@@ -58,7 +57,7 @@ public class Particle {
     // System.out.println(this.dataCenter);
     // System.out.println(objective);
 
-    this.costHistory.add(this.personalBestObjectiveValue);
+    this.objectiveHistory.add(this.personalBestObjectiveValue);
 
     if (objective > this.personalBestObjectiveValue) {
       // System.out.println("BETTER POSITION");
@@ -167,8 +166,8 @@ public class Particle {
     return this.personalBestObjectiveValue;
   }
 
-  public ArrayList<Double> getCostHistory() {
-    return this.costHistory;
+  public ArrayList<Double> getObjectiveHistory() {
+    return this.objectiveHistory;
   }
 
   @Override

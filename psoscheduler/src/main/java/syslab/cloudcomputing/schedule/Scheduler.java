@@ -1,5 +1,7 @@
 package syslab.cloudcomputing.schedule;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import syslab.cloudcomputing.utils.Utilities;
@@ -10,28 +12,48 @@ import syslab.cloudcomputing.simulation.*;
 
 public class Scheduler {
     public static void main(String[] args) {
-        DataCenter dataCenter = Scheduler.test8_DataCenter();
-        Workload workload = Scheduler.test8_Workload();
+        DataCenter dataCenter;
+        Workload workload;
+
+        try {
+            Class<?> c = Class.forName("syslab.cloudcomputing.schedule.Scheduler");
+            Class<?>[] paramTypes = null;
+            Object[] params = null;
+            
+            String getDataCenterMethodName = "test" + args[0] + "_DataCenter";
+            Method getDataCenter = c.getDeclaredMethod(getDataCenterMethodName, paramTypes);
+            getDataCenter.setAccessible(true);
+            dataCenter = (DataCenter) getDataCenter.invoke(null, params);
+
+            String getWorkloadMethodName = "test" + args[0] + "_Workload";
+            Method getWorkload = c.getDeclaredMethod(getWorkloadMethodName, paramTypes);
+            getWorkload.setAccessible(true);
+            workload = (Workload) getWorkload.invoke(null, params);
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | 
+                 IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            System.err.println(e);
+            return;
+        }
         
-        System.out.println(dataCenter);
-        System.out.println(workload);
+        // System.out.println(dataCenter);
+        // System.out.println(workload);
 
         // Scheduler.runRepeatedTest(dataCenter, workload, 20.0);
         Scheduler.runSingleTest(dataCenter, workload, true);
     }
 
-    public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordCostHistory) {
+    public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordObjectiveHistory) {
         PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
         swarm.runPSOAlgorithm();
         
-        if (recordCostHistory) {
-            System.out.println("Global Best Position: " + swarm.globalBestPosition);
-            System.out.println("Global Best Cost: " + swarm.globalBestObjectiveValue);
-            System.out.println("Global Best Mapping: " + swarm.globalBestTaskVmMapping);
-            System.out.print("Saving cost history to cost_history.csv... ");
+        if (recordObjectiveHistory) {
+            // System.out.println("Global Best Position: " + swarm.globalBestPosition);
+            System.out.println("Global Best Objective: " + swarm.globalBestObjectiveValue);
+            // System.out.println("Global Best Mapping: " + swarm.globalBestTaskVmMapping);
+            System.out.print("Saving objective history to objective_history.csv... ");
             
             ArrayList<ArrayList<Double>> history = swarm.getParticleObjectiveHistory();
-            Utilities.writeCostHistoryToCSV(history, "output_data/cost_history.csv");
+            Utilities.writeObjectiveHistoryToCSV(history, "output_data/objective_history.csv");
 
             System.out.println("Completed");
         }
