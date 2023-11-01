@@ -108,7 +108,6 @@ public class Scheduler {
         int vmMipsLow = 50;
 
         int highVmId = Utilities.getRandomInteger(0, nVms - 1);
-        System.out.println(highVmId);
 
         ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
 
@@ -203,7 +202,7 @@ public class Scheduler {
         return workload;
     }
 
-     public static DataCenter test8_DataCenter() {
+    public static DataCenter test8_DataCenter() {
         return Scheduler.test4_DataCenter();
     }
 
@@ -220,5 +219,25 @@ public class Scheduler {
         
         Workload workload = new Workload(tasks);
         return workload;
+    }
+
+    public static DataCenter test9_DataCenter() {
+        int nVms = 36;
+        int vmMipsInterval = 20;
+        int mips = 50;
+
+        ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
+
+        for (int i = 0; i < nVms; i++) {
+            vms.add(new VirtualMachine(mips));
+            mips += vmMipsInterval;
+        }
+
+        DataCenter dataCenter = new DataCenter(vms);
+        return dataCenter;
+    }
+
+    public static Workload test9_Workload() {
+        return Scheduler.test8_Workload();
     }
 }

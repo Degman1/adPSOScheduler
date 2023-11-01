@@ -46,7 +46,7 @@ public class Utilities {
 		try {
 			Files.write(_path, output.getBytes());
 		} catch (IOException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace(System.err);
 		}
 	}
 }
