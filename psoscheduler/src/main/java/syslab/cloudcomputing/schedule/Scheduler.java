@@ -31,7 +31,7 @@ public class Scheduler {
             workload = (Workload) getWorkload.invoke(null, params);
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | 
                  IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            System.err.println(e);
+            e.printStackTrace(System.err);
             return;
         }
         
