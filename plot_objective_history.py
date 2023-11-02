@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
   csvData = open(args.data_path, 'rb')
   data = np.loadtxt(csvData, delimiter='\t')
-  fname = f"./plots/test{args.test}_objective_history.jpg"
+  fname = f"./plots/test_{args.test}_objective_history.jpg"
   plot(args.test, data, fname)
 
   print(f"Completed")

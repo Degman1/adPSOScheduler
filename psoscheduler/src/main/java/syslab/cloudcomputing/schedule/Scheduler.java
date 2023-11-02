@@ -15,7 +15,7 @@ public class Scheduler {
         DataCenter dataCenter;
         Workload workload;
 
-        if (args[0].equals("hcsp")) {
+        if (args[0].equals("HCSP")) {
             String pathname = "Braun_et_al/" + args[1];
             int nVirtualMachines = 16;
             int nTasks = 512;

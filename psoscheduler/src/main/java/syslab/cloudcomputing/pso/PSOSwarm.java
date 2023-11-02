@@ -13,7 +13,7 @@ public class PSOSwarm {
   private final double w1 = 0.9;
   private final double w2 = 0.4;
 
-  private final int maxIterations = 1000;
+  private final int maxIterations = 800;
   private static final int nSwarms = 5;
   private static final int nParticles = 20;
 
