@@ -8,6 +8,7 @@ import syslab.cloudcomputing.simulation.Task;
 import syslab.cloudcomputing.simulation.VirtualMachine;
 import syslab.cloudcomputing.simulation.Workload;
 import syslab.cloudcomputing.utils.Matrix;
+import syslab.cloudcomputing.utils.Utilities;
 
 /*
  * Particle represents a complete solution to the optimization problem, meaning a complete 
@@ -44,6 +45,7 @@ public class Particle {
   public static enum InitializationStrategy {
     RANDOM,
     MCT,
+    HIGH_TASK_HIGH_VM
   }
 
   public Particle(DataCenter dataCenter, Workload workload) {
@@ -124,6 +126,36 @@ public class Particle {
       this.dataCenter.addExecutionTimeToVirtualMachine(t, vm);
     }
     
+    this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
+
+    updateDataCenter();
+    this.personalBestPosition = this.position;
+    this.personalBestObjectiveValue = this.dataCenter.computeObjective();
+    // TODO remove
+    this.personalBestMakespan = this.dataCenter.computeMakespan();
+    this.personalBestThroughput = this.dataCenter.computeThroughput();
+  }
+
+  // Initialization strategy used in this paper: https://www.mdpi.com/2079-9292/12/12/2580
+  // Top 25% of tasks by MI assigned to Virtual Machines with higher processing capacity
+  // The rest follow a random allocation strategy
+  private void highTaskHighVmInitialization() {
+    this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
+    
+    ArrayList<VirtualMachine> highCapacityVms = this.dataCenter.getHighCapacityVirtualMachines();
+    ArrayList<Task> heavyTasks = this.workload.getHeavyTasks();
+    
+    // Set top 25% of tasks by MI to the most capable machines
+    for (Task task : heavyTasks) {
+      VirtualMachine vm = highCapacityVms.get(Utilities.getRandomInteger(0, highCapacityVms.size()));
+      this.position.setComponent(idCounter, id, vm.getId() - 1);
+    }
+
+    for (Task task : remainingTasks) {
+      int vmId = Utilities.getRandomInteger(0, this.dataCenter.getVirtualMachineCount());
+      this.position.setComponent(idCounter, id, vmId);
+    }
+
     this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
 
     updateDataCenter();
