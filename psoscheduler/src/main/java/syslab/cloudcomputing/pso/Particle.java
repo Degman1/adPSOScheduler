@@ -31,6 +31,8 @@ public class Particle {
 
   private Matrix personalBestPosition;
   private double personalBestObjectiveValue;
+  private double personalBestMakespan;
+  private double personalBestThroughput;
 
   private ArrayList<Double> objectiveHistory = new ArrayList<Double>();
 
@@ -54,8 +56,6 @@ public class Particle {
 
     this.updateDataCenter();
     double objective = this.dataCenter.computeObjective();
-    // System.out.println(this.dataCenter);
-    // System.out.println(objective);
 
     this.objectiveHistory.add(this.personalBestObjectiveValue);
 
@@ -63,6 +63,9 @@ public class Particle {
       // System.out.println("BETTER POSITION");
       this.personalBestPosition = this.position.copy();
       this.personalBestObjectiveValue = objective;
+      // TODO remove the following two lines when benchmarking
+      this.personalBestMakespan = this.dataCenter.computeMakespan();
+      this.personalBestThroughput = this.dataCenter.computeThroughput();
       return 1;
     }
     // } else if (objective < this.personalBestObjectiveValue){
@@ -164,6 +167,14 @@ public class Particle {
 
   public double getPersonalBestObjectiveValue() {
     return this.personalBestObjectiveValue;
+  }
+
+  public double getPersonalBestMakespan() {
+    return this.personalBestMakespan;
+  }
+
+  public double getPersonalBestThroughput() {
+    return this.personalBestThroughput;
   }
 
   public ArrayList<Double> getObjectiveHistory() {

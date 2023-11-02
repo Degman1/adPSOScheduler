@@ -61,6 +61,8 @@ public class Scheduler {
         if (recordObjectiveHistory) {
             // System.out.println("Global Best Position: " + swarm.globalBestPosition);
             System.out.println("Global Best Objective: " + swarm.globalBestObjectiveValue);
+            System.out.println("Global Best Makespan: " + swarm.globalBestMakespan + " sec");
+            System.out.println("Global Best Throughput: " + swarm.globalBestThroughput + " tasks/sec");
             // System.out.println("Global Best Mapping: " + swarm.globalBestTaskVmMapping);
             System.out.print("Saving objective history to objective_history.csv... ");
             
