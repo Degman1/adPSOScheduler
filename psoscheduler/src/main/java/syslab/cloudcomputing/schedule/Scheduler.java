@@ -254,4 +254,36 @@ public class Scheduler {
     public static Workload test9_Workload() {
         return Scheduler.test8_Workload();
     }
+
+    // Task 10 corresponds to the setup in following paper's first scenario
+    // https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
+    public static DataCenter test10_DataCenter() {
+        int nVms = 100;
+        int vmMipsHigh = 5000;
+        int vmMipsLow = 1000;
+
+        ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
+
+        for (int i = 0; i < nVms; i++) {
+            vms.add(new VirtualMachine(Utilities.getRandomInteger(vmMipsLow, vmMipsHigh)));
+        }
+
+        DataCenter dataCenter = new CustomDataCenter(vms);
+        return dataCenter;
+    }
+
+    public static Workload test10_Workload() {
+        int nTasks = 800;
+        int taskMiHigh = 4000;
+        int taskMiLow = 1000;
+
+        ArrayList<Task> tasks = new ArrayList<Task>();
+
+        for (int i = 0; i < nTasks; i++) {
+            tasks.add(new Task(Utilities.getRandomInteger(taskMiLow, taskMiHigh)));
+        }
+        
+        Workload workload = new Workload(tasks);
+        return workload;
+    }
 }
