@@ -77,6 +77,21 @@ public abstract class DataCenter {
     return maxMakespan;
   }
 
+  public VirtualMachine getVmWithMinEET(Task t) {
+    Double minEET = null;
+    VirtualMachine vmMinEET = null;
+
+    for (VirtualMachine vm : this.virtualMachines) {
+      double eet = this.virtualMachineReadyTime.get(vm) + this.getLoadExecutionTime(t, vm);
+      if (minEET == null || eet < minEET) {
+        minEET = eet;
+        vmMinEET = vm;
+      }
+    }
+
+    return vmMinEET;
+  }
+
   public double computeThroughput() {
     return this.taskCount / this.computeMakespan();
   }

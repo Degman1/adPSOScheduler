@@ -13,9 +13,9 @@ public class PSOSwarm {
   private final double w1 = 0.9;
   private final double w2 = 0.4;
 
-  private final int maxIterations = 800;
+  private final int maxIterations = 400;
   private static final int nSwarms = 5;
-  private static final int nParticles = 20;
+  private static final int nParticles = 50;
 
   private double p_s = 1.0;
 
@@ -42,10 +42,14 @@ public class PSOSwarm {
 
   private void initializeSwarm(int nParticles) {
     this.particles = new ArrayList<Particle>();
-    for (int i = 0; i < nParticles; i++) {
+    for (int i = 0; i < nParticles - 1; i++) {
       Particle particle = new Particle(this.dataCenter, this.workload);
       this.particles.add(particle);
     }
+
+    // Include one single particle initialized with MCT algorithm
+    Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.MCT);
+    this.particles.add(particle);
 
     this.findGlobalBest();
     // TODO remove the below line when benchmarking

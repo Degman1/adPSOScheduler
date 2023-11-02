@@ -40,6 +40,10 @@ public class Workload {
     return wk;
   }
 
+  public ArrayList<Task> getTasks() {
+    return this.tasks;
+  }
+
   @Override
   public String toString() {
     return "{ Workload: " + tasks + " }";

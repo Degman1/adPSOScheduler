@@ -41,11 +41,27 @@ public class Particle {
   private Workload workload;
   private DataCenter dataCenter;
 
+  public static enum InitializationStrategy {
+    RANDOM,
+    MCT,
+  }
+
   public Particle(DataCenter dataCenter, Workload workload) {
     this.id = Particle.idCounter++;
     this.workload = workload;
     this.dataCenter = dataCenter;
-    this.randomInitialization();
+    randomInitialization();
+  }
+
+  public Particle(DataCenter dataCenter, Workload workload, InitializationStrategy initializationStrategy) {
+    this.id = Particle.idCounter++;
+    this.workload = workload;
+    this.dataCenter = dataCenter;
+    if (initializationStrategy == Particle.InitializationStrategy.MCT) {
+      mctInitialization();
+    } else {
+      randomInitialization();
+    }
   }
 
   // Returns true is this iteration was a success (ie. it acheived a new personal best)
@@ -79,10 +95,11 @@ public class Particle {
 
   private void randomInitialization() {
     this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
-    this.position.randomPositionInitialization();
 
     this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
     this.velocity.randomVelocityInitialization(0, 1);
+
+    this.updatePosition();
 
     updateDataCenter();
 
@@ -90,7 +107,31 @@ public class Particle {
     // objective function computation
     this.personalBestPosition = this.position;
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
-    // System.out.println(this.position);
+    // TODO remove
+    this.personalBestMakespan = this.dataCenter.computeMakespan();
+    this.personalBestThroughput = this.dataCenter.computeThroughput();
+  }
+
+  // Minimum completion time algorithm used for initialization as per https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
+  private void mctInitialization() {
+    this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
+
+    this.dataCenter.resetVirtualMachineReadyTimes();
+
+    for (Task t : this.workload.getTasks()) {
+      VirtualMachine vm = this.dataCenter.getVmWithMinEET(t);
+      this.position.setComponent(t.getId() - 1, vm.getId() - 1, 1);
+      this.dataCenter.addExecutionTimeToVirtualMachine(t, vm);
+    }
+    
+    this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
+
+    updateDataCenter();
+    this.personalBestPosition = this.position;
+    this.personalBestObjectiveValue = this.dataCenter.computeObjective();
+    // TODO remove
+    this.personalBestMakespan = this.dataCenter.computeMakespan();
+    this.personalBestThroughput = this.dataCenter.computeThroughput();
   }
 
   private void updateDataCenter() {

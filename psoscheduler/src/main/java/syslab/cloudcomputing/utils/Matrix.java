@@ -131,6 +131,10 @@ public class Matrix {
     return this.operate(constant, Matrix.multilpication);
   }
 
+  public Matrix addJ(double constant) {
+    return this.operate(constant, Matrix.addition);
+  }
+
   public int getRowsCount() {
     return this.rows;
   }
