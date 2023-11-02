@@ -1,7 +1,6 @@
 package syslab.cloudcomputing.simulation;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /*
  * The concept of a data center that is abstracted away to focus only on the
@@ -21,19 +20,4 @@ public class CustomDataCenter extends DataCenter {
 		// The size of the task divided by the assigned VM's computation power
 		return task.getMillionsOfInstructions() / (double) virtualMachine.getMillionsOfInstructionsPerSecond();
 	}
-
-  @Override
-  public double computeMakespan() {
-    double maxMakespan = 0.0;
-		
-		// Makespan is defined as the maximum completion time over all VMs
-		for (Map.Entry<VirtualMachine, Double> entry : this.virtualMachineReadyTime.entrySet()) {
-      double completionTime = entry.getValue();
-      if (completionTime > maxMakespan) {
-        maxMakespan = completionTime;
-			}
-    }
-
-    return maxMakespan;
-  }
 }

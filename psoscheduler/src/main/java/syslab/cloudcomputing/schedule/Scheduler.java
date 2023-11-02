@@ -16,8 +16,11 @@ public class Scheduler {
         Workload workload;
 
         if (args[0].equals("hcsp")) {
-            dataCenter = hcsp_DataCenter();
-            workload = hcsp_Workload();
+            String pathname = "Braun_et_al/" + args[1];
+            int nVirtualMachines = 16;
+            int nTasks = 512;
+            dataCenter = new HcspDataCenter(pathname, nTasks, nVirtualMachines);
+            workload = Workload.generateNullWorkload(nTasks);
         } else if (args[0].equals("custom")) {
             try {
                 Class<?> c = Class.forName("syslab.cloudcomputing.schedule.Scheduler");
@@ -47,6 +50,7 @@ public class Scheduler {
         // System.out.println(workload);
 
         // Scheduler.runRepeatedTest(dataCenter, workload, 20.0);
+
         Scheduler.runSingleTest(dataCenter, workload, true);
     }
 
@@ -82,14 +86,6 @@ public class Scheduler {
         }
 
         System.out.println(success / nRetries);
-    }
-
-    public static DataCenter hcsp_DataCenter() {
-        return null;
-    }
-
-    public static Workload hcsp_Workload() {
-        return null;
     }
 
     public static DataCenter test1_DataCenter() {

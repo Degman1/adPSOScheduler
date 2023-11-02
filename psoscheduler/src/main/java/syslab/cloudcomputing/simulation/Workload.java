@@ -32,6 +32,13 @@ public class Workload {
     return this.tasks.size();
   }
 
+  public static Workload generateNullWorkload(int nTasks) {
+    Workload wk = new Workload();
+    for (int i = 0; i < nTasks; i++) {
+      wk.addTask(new Task(0));
+    }
+    return wk;
+  }
 
   @Override
   public String toString() {

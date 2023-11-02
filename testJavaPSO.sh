@@ -4,7 +4,7 @@
 n=$1
 
 # Run the main Java method from the Scheduler class to generate the algorithm output data
-/usr/bin/env /Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages -cp /Users/davidgerard/Documents/Coding/UMASS/Research/adPSOScheduler/psoscheduler/target/classes syslab.cloudcomputing.schedule.Scheduler "custom" $n
+/usr/bin/env /Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages -cp /Users/davidgerard/Documents/Coding/UMASS/Research/adPSOScheduler/psoscheduler/target/classes syslab.cloudcomputing.schedule.Scheduler "hcsp" "u_c_hilo.0"
 
-# Generate a objective history plot based off the output data
-python3 plot_objective_history.py --test $n
+# # Generate a objective history plot based off the output data
+# python3 plot_objective_history.py --test $n

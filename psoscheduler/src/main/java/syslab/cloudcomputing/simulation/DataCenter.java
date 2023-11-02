@@ -2,6 +2,7 @@ package syslab.cloudcomputing.simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class DataCenter {
   protected int dcVirtualMachineId = 1;
@@ -13,6 +14,7 @@ public abstract class DataCenter {
 
   public DataCenter() {
     this.virtualMachines = new ArrayList<VirtualMachine>();
+    this.virtualMachineReadyTime = new HashMap<VirtualMachine, Double>();
   }
 
   public DataCenter(ArrayList<VirtualMachine> virtualMachines) {
@@ -61,7 +63,19 @@ public abstract class DataCenter {
 		return throughput + (1 / makespan);
 	}
 
-  abstract public double computeMakespan();
+  public double computeMakespan() {
+    double maxMakespan = 0.0;
+		
+		// Makespan is defined as the maximum completion time over all VMs
+		for (Map.Entry<VirtualMachine, Double> entry : this.virtualMachineReadyTime.entrySet()) {
+      double completionTime = entry.getValue();
+      if (completionTime > maxMakespan) {
+        maxMakespan = completionTime;
+			}
+    }
+
+    return maxMakespan;
+  }
 
   public double computeThroughput() {
     return this.taskCount / this.computeMakespan();
