@@ -96,7 +96,7 @@ public class Particle {
     for (int i = 0; i < this.position.getRowsCount(); i++) {
       Task task = workload.getTaskById(i);
       VirtualMachine virtualMachine = dataCenter.getVirtualMachineById((int) this.position.getIndexOfFirstNonZeroColumnForRow(i));
-      this.dataCenter.addExecutionTimeToVirtualMachine(task.getMillionsOfInstructions(), virtualMachine);
+      this.dataCenter.addExecutionTimeToVirtualMachine(task, virtualMachine);
     }
   }
 

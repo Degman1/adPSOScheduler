@@ -15,23 +15,31 @@ public class Scheduler {
         DataCenter dataCenter;
         Workload workload;
 
-        try {
-            Class<?> c = Class.forName("syslab.cloudcomputing.schedule.Scheduler");
-            Class<?>[] paramTypes = null;
-            Object[] params = null;
-            
-            String getDataCenterMethodName = "test" + args[0] + "_DataCenter";
-            Method getDataCenter = c.getDeclaredMethod(getDataCenterMethodName, paramTypes);
-            getDataCenter.setAccessible(true);
-            dataCenter = (DataCenter) getDataCenter.invoke(null, params);
+        if (args[0].equals("hcsp")) {
+            dataCenter = hcsp_DataCenter();
+            workload = hcsp_Workload();
+        } else if (args[0].equals("custom")) {
+            try {
+                Class<?> c = Class.forName("syslab.cloudcomputing.schedule.Scheduler");
+                Class<?>[] paramTypes = null;
+                Object[] params = null;
+                
+                String getDataCenterMethodName = "test" + args[1] + "_DataCenter";
+                Method getDataCenter = c.getDeclaredMethod(getDataCenterMethodName, paramTypes);
+                getDataCenter.setAccessible(true);
+                dataCenter = (DataCenter) getDataCenter.invoke(null, params);
 
-            String getWorkloadMethodName = "test" + args[0] + "_Workload";
-            Method getWorkload = c.getDeclaredMethod(getWorkloadMethodName, paramTypes);
-            getWorkload.setAccessible(true);
-            workload = (Workload) getWorkload.invoke(null, params);
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | 
-                 IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace(System.err);
+                String getWorkloadMethodName = "test" + args[1] + "_Workload";
+                Method getWorkload = c.getDeclaredMethod(getWorkloadMethodName, paramTypes);
+                getWorkload.setAccessible(true);
+                workload = (Workload) getWorkload.invoke(null, params);
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | 
+                    IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                e.printStackTrace(System.err);
+                return;
+            }
+        } else {
+            System.err.println("Invalid argument: " + args[0]);
             return;
         }
         
@@ -76,10 +84,18 @@ public class Scheduler {
         System.out.println(success / nRetries);
     }
 
+    public static DataCenter hcsp_DataCenter() {
+        return null;
+    }
+
+    public static Workload hcsp_Workload() {
+        return null;
+    }
+
     public static DataCenter test1_DataCenter() {
         ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
         vms.add(new VirtualMachine(100));
-        DataCenter dataCenter = new DataCenter(vms);
+        DataCenter dataCenter = new CustomDataCenter(vms);
         return dataCenter;
     }
 
@@ -94,7 +110,7 @@ public class Scheduler {
         ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
         vms.add(new VirtualMachine(100));
         vms.add(new VirtualMachine(50));
-        DataCenter dataCenter = new DataCenter(vms);
+        DataCenter dataCenter = new CustomDataCenter(vms);
         return dataCenter;
     }
 
@@ -119,7 +135,7 @@ public class Scheduler {
             }
         }
 
-        DataCenter dataCenter = new DataCenter(vms);
+        DataCenter dataCenter = new CustomDataCenter(vms);
         return dataCenter;
     }
 
@@ -138,7 +154,7 @@ public class Scheduler {
             vms.add(new VirtualMachine(Utilities.getRandomInteger(vmMipsLow, vmMipsHigh)));
         }
 
-        DataCenter dataCenter = new DataCenter(vms);
+        DataCenter dataCenter = new CustomDataCenter(vms);
         return dataCenter;
     }
 
@@ -233,7 +249,7 @@ public class Scheduler {
             mips += vmMipsInterval;
         }
 
-        DataCenter dataCenter = new DataCenter(vms);
+        DataCenter dataCenter = new CustomDataCenter(vms);
         return dataCenter;
     }
 
