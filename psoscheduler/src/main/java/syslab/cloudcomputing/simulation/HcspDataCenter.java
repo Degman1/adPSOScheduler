@@ -31,10 +31,10 @@ public class HcspDataCenter extends DataCenter {
 
         this.hcspDataSet[i][j] = data;
 
-        if (j >= nVirtualMachines - 1) {
-          i = (i + 1) % nTasks;
+        if (i >= nTasks - 1) {
+          j = (j + 1) % nVirtualMachines;
         }
-        j = (j + 1) % nVirtualMachines;
+        i = (i + 1) % nTasks;
       }
 
       myReader.close();
