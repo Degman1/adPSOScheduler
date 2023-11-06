@@ -12,6 +12,9 @@ import syslab.cloudcomputing.simulation.*;
 
 public class Scheduler {
     public static void main(String[] args) {
+        // Set random seed
+        Utilities.setSeed(0);
+
         DataCenter dataCenter;
         Workload workload;
 

@@ -13,7 +13,7 @@ def plot(test_id, particle_histories, path):
   plt.xlabel("Iteration")
   plt.ylabel("Objective (Throughput + (1 / Makespan))")
   plt.legend(bbox_to_anchor = (1.25, 0.5), loc='center right')
-  plt.tight_layout()
+  # plt.tight_layout()
 
   plt.savefig(path)
 

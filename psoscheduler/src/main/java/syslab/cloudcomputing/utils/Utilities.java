@@ -8,14 +8,19 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Utilities {
+	public static Random rand = new Random();
+
+	public static void setSeed(long seed) {
+		rand.setSeed(seed);
+	}
+
   /*
 	 * Generate a random Integer in range [min, max)
 	 * @param The minimum value to take inclusively
 	 * @param The maximum value to take exclusively
 	 */
 	public static Integer getRandomInteger(int min, int max) {
-		Random ran = new Random();
-		return ran.nextInt(max - min) + min;
+		return rand.nextInt(max - min) + min;
 	}
 	
 	/*
@@ -24,7 +29,7 @@ public class Utilities {
 	 * @param The maximum value to take exclusively
 	 */
 	public static Double getRandomDouble(double min, double max) {
-		return Math.random() * (max - min) + min;
+		return rand.nextDouble() * (max - min) + min;
 	}
 
 	public static void writeObjectiveHistoryToCSV(ArrayList<ArrayList<Double>> objectiveHistories, String path) {

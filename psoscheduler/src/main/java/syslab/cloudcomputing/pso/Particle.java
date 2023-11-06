@@ -1,8 +1,8 @@
 package syslab.cloudcomputing.pso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import syslab.cloudcomputing.simulation.DataCenter;
 import syslab.cloudcomputing.simulation.Task;
@@ -20,7 +20,7 @@ public class Particle {
   final static double c1 = 2.0;
   final static double c2 = 1.49455;
 
-  final static double maxAbsoluteVelocity = 10.0; // TODO what value to put in here
+  final static double maxAbsoluteVelocity = 10.0;  // from https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
 
   private static int idCounter = 1;
 	private int id;
@@ -119,17 +119,30 @@ public class Particle {
 
   // Minimum completion time algorithm used for initialization as per https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
   private void mctInitialization() {
+    // Attempt to overcome this issue with getting stuck in local optimums: https://www.mdpi.com/1999-4893/11/2/23
+    // Potential remedy: https://www.intechopen.com/journals/1/articles/117
     this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
 
     this.dataCenter.resetVirtualMachineReadyTimes();
 
-    for (Task t : this.workload.getTasks()) {
+    ArrayList<Task> tasks = new ArrayList<Task>(this.workload.getTasks());
+    Collections.shuffle(tasks);
+
+    for (Task t : tasks) {
       VirtualMachine vm = this.dataCenter.getVmWithMinEET(t);
-      this.position.setComponent(t.getId() - 1, vm.getId() - 1, 1);
-      this.dataCenter.addExecutionTimeToVirtualMachine(t, vm);
+      if (Utilities.getRandomDouble(0, 1) > 0.3) {
+        this.position.setComponent(t.getId() - 1, vm.getId() - 1, 1);
+        this.dataCenter.addExecutionTimeToVirtualMachine(t, vm);
+      } else {
+        int vmId = Utilities.getRandomInteger(0, this.dataCenter.getVirtualMachineCount() - 1);
+        VirtualMachine randomVm = this.dataCenter.getVirtualMachineById(vmId);
+        this.position.setComponent(t.getId() - 1, vmId, 1);
+        this.dataCenter.addExecutionTimeToVirtualMachine(t, randomVm);
+      }
     }
     
-    this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
+    this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
+    this.velocity.randomVelocityInitialization(0, 1);
 
     updateDataCenter();
     this.personalBestPosition = this.position;
@@ -186,8 +199,8 @@ public class Particle {
 
   private void updateVelocity(double w) {
     // Randomize constants r1 and r2
-    double r1 = Math.random();
-    double r2 = Math.random();
+    double r1 = Utilities.getRandomDouble(0, 1);
+    double r2 = Utilities.getRandomDouble(0, 1);
 
     // System.out.println("\nParticle " + this.id + " Velocity (before): " + this.velocity);
     Matrix previousVelocityFactor = this.velocity.copy().multiply(w);
