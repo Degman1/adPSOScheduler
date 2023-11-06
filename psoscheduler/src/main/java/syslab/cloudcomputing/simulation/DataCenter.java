@@ -1,6 +1,8 @@
 package syslab.cloudcomputing.simulation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,6 +92,12 @@ public abstract class DataCenter {
     }
 
     return vmMinEET;
+  }
+
+  public ArrayList<VirtualMachine> getSortedVirtualMachines() {
+    ArrayList<VirtualMachine> virtualMachines = new ArrayList<>(this.virtualMachines);
+    Collections.sort(virtualMachines, Comparator.comparing(VirtualMachine::getMillionsOfInstructionsPerSecond));
+    return virtualMachines;
   }
 
   public double computeThroughput() {

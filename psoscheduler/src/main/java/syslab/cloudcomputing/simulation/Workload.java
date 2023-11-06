@@ -1,6 +1,9 @@
 package syslab.cloudcomputing.simulation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 
 public class Workload {
   int taskId = 1;
@@ -26,6 +29,12 @@ public class Workload {
     }
     
     return null;
+  }
+
+  public ArrayList<Task> getSortedTasks() {
+    ArrayList<Task> tasks = new ArrayList<>(this.tasks);
+    Collections.sort(tasks, Comparator.comparing(Task::getMillionsOfInstructions));
+    return tasks;
   }
 
   public int getTaskCount() {

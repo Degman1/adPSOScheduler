@@ -2,6 +2,7 @@ package syslab.cloudcomputing.pso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import syslab.cloudcomputing.simulation.DataCenter;
 import syslab.cloudcomputing.simulation.Task;
@@ -52,7 +53,7 @@ public class Particle {
     this.id = Particle.idCounter++;
     this.workload = workload;
     this.dataCenter = dataCenter;
-    randomInitialization();
+    this.randomInitialization();
   }
 
   public Particle(DataCenter dataCenter, Workload workload, InitializationStrategy initializationStrategy) {
@@ -60,9 +61,11 @@ public class Particle {
     this.workload = workload;
     this.dataCenter = dataCenter;
     if (initializationStrategy == Particle.InitializationStrategy.MCT) {
-      mctInitialization();
+      this.mctInitialization();
+    } else if (initializationStrategy == Particle.InitializationStrategy.HIGH_TASK_HIGH_VM) {
+      this.highTaskHighVmInitialization();
     } else {
-      randomInitialization();
+      this.randomInitialization();
     }
   }
 
@@ -142,18 +145,23 @@ public class Particle {
   private void highTaskHighVmInitialization() {
     this.position = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
     
-    ArrayList<VirtualMachine> highCapacityVms = this.dataCenter.getHighCapacityVirtualMachines();
-    ArrayList<Task> heavyTasks = this.workload.getHeavyTasks();
-    
-    // Set top 25% of tasks by MI to the most capable machines
-    for (Task task : heavyTasks) {
-      VirtualMachine vm = highCapacityVms.get(Utilities.getRandomInteger(0, highCapacityVms.size()));
-      this.position.setComponent(idCounter, id, vm.getId() - 1);
-    }
+    ArrayList<VirtualMachine> sortedVms = this.dataCenter.getSortedVirtualMachines();
+    ArrayList<Task> sortedTasks = this.workload.getSortedTasks();
 
-    for (Task task : remainingTasks) {
-      int vmId = Utilities.getRandomInteger(0, this.dataCenter.getVirtualMachineCount());
-      this.position.setComponent(idCounter, id, vmId);
+    int vmQ3 = sortedVms.size() * 1 / 2;
+    int taskQ3 = sortedTasks.size() * 1 / 2;
+    
+    for (int i = 0; i < sortedTasks.size(); i++) {
+      VirtualMachine vm;
+      Task t = sortedTasks.get(i);
+      if (i < taskQ3) {
+        // Assign to low capacity machine
+        vm = sortedVms.get(Utilities.getRandomInteger(0, vmQ3));
+      } else {
+        // Assign to high capacity machine
+        vm = sortedVms.get(Utilities.getRandomInteger(vmQ3, sortedVms.size()));
+      }
+      this.position.setComponent(t.getId() - 1, vm.getId() - 1, 1);
     }
 
     this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
