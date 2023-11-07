@@ -66,6 +66,7 @@ public class Particle {
     }
   }
 
+  // NOTE Software Engineering Approach to the Algorithm's development
   // Returns true is this iteration was a success (ie. it acheived a new personal best)
   public int runIteration(double w) {
 

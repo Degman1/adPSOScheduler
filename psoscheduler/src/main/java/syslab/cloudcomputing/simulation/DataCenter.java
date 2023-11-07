@@ -14,6 +14,8 @@ public abstract class DataCenter {
   protected HashMap<VirtualMachine, Double> virtualMachineReadyTime;
   protected int taskCount = 0;
 
+  protected int totalMillionsOfInstructions = 0;
+
   public DataCenter() {
     this.virtualMachines = new ArrayList<VirtualMachine>();
     this.virtualMachineReadyTime = new HashMap<VirtualMachine, Double>();
@@ -43,6 +45,7 @@ public abstract class DataCenter {
       this.virtualMachineReadyTime.put(virtualMachine, 0.0);
     }
     this.taskCount = 0;
+    this.totalMillionsOfInstructions = 0;
   }
 
   public void addExecutionTimeToVirtualMachine(Task task, VirtualMachine virtualMachine) {
@@ -53,6 +56,7 @@ public abstract class DataCenter {
     double newExecutionTime = currentExecutionTime + getLoadExecutionTime(task, virtualMachine);
     this.virtualMachineReadyTime.put(virtualMachine, newExecutionTime);
     taskCount++;
+    this.totalMillionsOfInstructions += task.getMillionsOfInstructions();
   }
 
   abstract protected double getLoadExecutionTime(Task task, VirtualMachine virtualMachine);
@@ -60,14 +64,15 @@ public abstract class DataCenter {
   public double computeObjective() {
 		double makespan = this.computeMakespan();
     double throughput = (this.taskCount / makespan);
-    double energyConsumption = this._computeEnergyConsumption(makespan);
-    double averageEnergyConsumptionPerTask  = energyConsumption / this.taskCount;
+    double KW = this._computeEnergyConsumptionKW(makespan);
+    double hW = KW * 10;  // hectowatts
+    double averageWattsPerTask = hW / this.taskCount;
     // Scale the energy consumption to an appropriate weight in the objective function
-    return throughput + (100.0 / averageEnergyConsumptionPerTask);
+    return throughput + (2.0 / averageWattsPerTask);
 	}
 
   // Private version that doesn't recompute the makespan to prioritize efficiency
-  private double _computeEnergyConsumption(double makespan) {
+  private double _computeEnergyConsumptionKW(double makespan) {
     double energyConsumption = 0;
 
     for (Map.Entry<VirtualMachine, Double> entry : this.virtualMachineReadyTime.entrySet()) {
@@ -79,15 +84,18 @@ public abstract class DataCenter {
       energyConsumption += machineEnergyConsumption;
     }
 
-    // Convert from(Joules * MIPS) to (megaJoules * MIPS)
-    energyConsumption /= 1000000.0;
+    // Convert from Joules * MIPS to Joules / sec (Watts)
+    energyConsumption /= this.totalMillionsOfInstructions;
+
+    // Convert from Watts (W) to KiloWatts (KW)
+    energyConsumption /= 1000.0;
 
     return energyConsumption;
   }
 
-  public double computeEnergyConsumption() {
+  public double computeEnergyConsumptionKW() {
     double makespan = this.computeMakespan();
-    return this._computeEnergyConsumption(makespan);
+    return this._computeEnergyConsumptionKW(makespan);
   }
 
   public double computeMakespan() {

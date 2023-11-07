@@ -71,7 +71,7 @@ public class Scheduler {
 
         System.out.println("Global Best Makespan: " + dataCenter.computeMakespan() + " sec");
         System.out.println("Global Best Throughput: " + dataCenter.computeThroughput() + " tasks/sec");
-        System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumption() + " MJ * MIPS");
+        System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumptionKW() + " KW");
         
         System.out.print("Saving objective history to objective_history.csv... ");
         
@@ -313,7 +313,7 @@ public class Scheduler {
         for (int i = 0; i < nVms; i++) {
             vms.add(new VirtualMachine(
                 Utilities.getRandomInteger(vmMipsLow, vmMipsHigh),
-                Utilities.getRandomInteger(activeStateJoulesPerMillionInstructionsLow, activeStateJoulesPerMillionInstructionsHigh);
+                Utilities.getRandomInteger(activeStateJoulesPerMillionInstructionsLow, activeStateJoulesPerMillionInstructionsHigh)
             ));
         }
 
