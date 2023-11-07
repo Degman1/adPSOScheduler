@@ -31,9 +31,13 @@ public class Workload {
     return null;
   }
 
-  public ArrayList<Task> getSortedTasks() {
+  public ArrayList<Task> getSortedTasks(Boolean reversed) {
     ArrayList<Task> tasks = new ArrayList<>(this.tasks);
-    Collections.sort(tasks, Comparator.comparing(Task::getMillionsOfInstructions));
+    if (reversed) {
+      Collections.sort(tasks, Comparator.comparing(Task::getMillionsOfInstructions).reversed());
+    } else {
+      Collections.sort(tasks, Comparator.comparing(Task::getMillionsOfInstructions));
+    }
     return tasks;
   }
 

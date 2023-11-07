@@ -289,4 +289,32 @@ public class Scheduler {
         Workload workload = new Workload(tasks);
         return workload;
     }
+
+    // Task 11 corresponds to the setup in following paper's first scenario
+    // https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
+    // This time it includes varying 
+    public static DataCenter test11_DataCenter() {
+        int nVms = 100;
+        int vmMipsHigh = 5000;
+        int vmMipsLow = 1000;
+
+        int activeStateJoulesPerMillionInstructionsLow = 200;   // TODO Is this correct?
+        int activeStateJoulesPerMillionInstructionsHigh = 1000;
+
+        ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
+
+        for (int i = 0; i < nVms; i++) {
+            vms.add(new VirtualMachine(
+                Utilities.getRandomInteger(vmMipsLow, vmMipsHigh),
+                Utilities.getRandomInteger(activeStateJoulesPerMillionInstructionsLow, activeStateJoulesPerMillionInstructionsHigh);
+            ));
+        }
+
+        DataCenter dataCenter = new CustomDataCenter(vms);
+        return dataCenter;
+    }
+
+    public static Workload test11_Workload() {
+        return test10_Workload();
+    }
 }

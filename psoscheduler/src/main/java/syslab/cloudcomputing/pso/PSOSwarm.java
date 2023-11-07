@@ -13,9 +13,9 @@ public class PSOSwarm {
   private final double w1 = 0.9;
   private final double w2 = 0.4;
 
-  private final int maxIterations = 400;
+  private final int maxIterations = 200;
   private static final int nSwarms = 5;
-  private static final int nParticles = 20;
+  private static final int nParticles = 70;
 
   private double p_s = 1.0;
 
@@ -50,8 +50,6 @@ public class PSOSwarm {
     this.findGlobalBest();
     // TODO remove the below line when benchmarking
     // this.getGlobalBestTaskVmMapping();
-
-    System.out.println(this.globalBestMakespan);
   }
 
   private void updateTaskVmMapping() {
