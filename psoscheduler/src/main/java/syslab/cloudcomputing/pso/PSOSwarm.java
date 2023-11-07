@@ -15,7 +15,7 @@ public class PSOSwarm {
 
   private final int maxIterations = 200;
   private static final int nSwarms = 5;
-  private static final int nParticles = 70;
+  private static final int nParticles = 20;
 
   private double p_s = 1.0;
 
@@ -23,8 +23,6 @@ public class PSOSwarm {
 
   public Matrix globalBestPosition;
   public double globalBestObjectiveValue = 0;
-  public double globalBestMakespan = 0;
-  public double globalBestThroughput = 0;
   private ArrayList<Double> objectiveHistory = new ArrayList<Double>();
 
   public HashMap<Task, VirtualMachine> globalBestTaskVmMapping = new HashMap<Task, VirtualMachine>();
@@ -43,7 +41,7 @@ public class PSOSwarm {
   private void initializeSwarm(int nParticles) {
     this.particles = new ArrayList<Particle>();
     for (int i = 0; i < nParticles; i++) {
-      Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.MCT);
+      Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.RANDOM);
       this.particles.add(particle);
     }
 
@@ -123,9 +121,6 @@ public class PSOSwarm {
       if (p.getPersonalBestObjectiveValue() > this.globalBestObjectiveValue) {
         this.globalBestObjectiveValue = p.getPersonalBestObjectiveValue();
         this.globalBestPosition = p.getPersonalBestPosition().copy();
-        // TODO remove the following two lines when benchmarking
-        this.globalBestMakespan = p.getPersonalBestMakespan();
-        this.globalBestThroughput = p.getPersonalBestThroughput();
         newBest = true;
       }
     }

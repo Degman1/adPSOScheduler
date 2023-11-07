@@ -14,7 +14,7 @@ public class VirtualMachine {
 	public VirtualMachine(int millionsOfInstructionsPerSecond) {
 		this.id = VirtualMachine.idCounter++;
 		this.millionsOfInstructionsPerSecond = millionsOfInstructionsPerSecond;
-		this.activeStateJoulesPerMillionInstructions = 
+		this.activeStateJoulesPerMillionInstructions = 500;
 		this.dataCenterId = 0;
 	}
 
@@ -43,7 +43,7 @@ public class VirtualMachine {
 	}
 
   public String toString() {
-    return String.format("(VM%d: %d mips)", this.id, this.millionsOfInstructionsPerSecond);
+    return String.format("(VM%d: %d mips, %d J/MI)", this.id, this.millionsOfInstructionsPerSecond, this.activeStateJoulesPerMillionInstructions);
   }
 
   public int getId() {

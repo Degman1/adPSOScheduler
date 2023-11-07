@@ -3,6 +3,7 @@ package syslab.cloudcomputing.schedule;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Map;
 
 import syslab.cloudcomputing.utils.Utilities;
 
@@ -13,7 +14,7 @@ import syslab.cloudcomputing.simulation.*;
 public class Scheduler {
     public static void main(String[] args) {
         // Set random seed
-        Utilities.setSeed(0);
+        Utilities.setSeed(1);
 
         DataCenter dataCenter;
         Workload workload;
@@ -60,15 +61,21 @@ public class Scheduler {
     public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordObjectiveHistory) {
         PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
         swarm.runPSOAlgorithm();
+
+        System.out.println("Global Best Objective: " + swarm.globalBestObjectiveValue);
+        
+        dataCenter.resetVirtualMachineReadyTimes();
+        for (Map.Entry<Task, VirtualMachine> entry : swarm.globalBestTaskVmMapping.entrySet()) {
+            dataCenter.addExecutionTimeToVirtualMachine(entry.getKey(), entry.getValue());
+        }
+
+        System.out.println("Global Best Makespan: " + dataCenter.computeMakespan() + " sec");
+        System.out.println("Global Best Throughput: " + dataCenter.computeThroughput() + " tasks/sec");
+        System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumption() + " MJ * MIPS");
+        
+        System.out.print("Saving objective history to objective_history.csv... ");
         
         if (recordObjectiveHistory) {
-            // System.out.println("Global Best Position: " + swarm.globalBestPosition);
-            System.out.println("Global Best Objective: " + swarm.globalBestObjectiveValue);
-            System.out.println("Global Best Makespan: " + swarm.globalBestMakespan + " sec");
-            System.out.println("Global Best Throughput: " + swarm.globalBestThroughput + " tasks/sec");
-            // System.out.println("Global Best Mapping: " + swarm.globalBestTaskVmMapping);
-            System.out.print("Saving objective history to objective_history.csv... ");
-            
             ArrayList<ArrayList<Double>> history = swarm.getParticleObjectiveHistory();
             Utilities.writeObjectiveHistoryToCSV(history, "output_data/objective_history.csv");
 

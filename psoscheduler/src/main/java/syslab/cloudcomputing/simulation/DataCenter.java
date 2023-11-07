@@ -59,11 +59,36 @@ public abstract class DataCenter {
 
   public double computeObjective() {
 		double makespan = this.computeMakespan();
-    // Compute throughput manually as to not recompute makespan
-		double throughput = this.taskCount / makespan;
-		
-		return throughput + (1 / makespan);
+    double throughput = (this.taskCount / makespan);
+    double energyConsumption = this._computeEnergyConsumption(makespan);
+    double averageEnergyConsumptionPerTask  = energyConsumption / this.taskCount;
+    // Scale the energy consumption to an appropriate weight in the objective function
+    return throughput + (100.0 / averageEnergyConsumptionPerTask);
 	}
+
+  // Private version that doesn't recompute the makespan to prioritize efficiency
+  private double _computeEnergyConsumption(double makespan) {
+    double energyConsumption = 0;
+
+    for (Map.Entry<VirtualMachine, Double> entry : this.virtualMachineReadyTime.entrySet()) {
+      VirtualMachine vm = entry.getKey();
+      double millionsOfInstructions = entry.getValue();
+      double machineEnergyConsumption = millionsOfInstructions * vm.getActiveStateJoulesPerMillionInstructions();
+      machineEnergyConsumption += (makespan - millionsOfInstructions) * vm.getIdleStateJoulesPerMillionInstructions();
+      machineEnergyConsumption *= vm.getMillionsOfInstructionsPerSecond();
+      energyConsumption += machineEnergyConsumption;
+    }
+
+    // Convert from(Joules * MIPS) to (megaJoules * MIPS)
+    energyConsumption /= 1000000.0;
+
+    return energyConsumption;
+  }
+
+  public double computeEnergyConsumption() {
+    double makespan = this.computeMakespan();
+    return this._computeEnergyConsumption(makespan);
+  }
 
   public double computeMakespan() {
     double maxMakespan = 0.0;

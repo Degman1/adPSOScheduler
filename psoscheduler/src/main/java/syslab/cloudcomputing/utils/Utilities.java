@@ -20,6 +20,9 @@ public class Utilities {
 	 * @param The maximum value to take exclusively
 	 */
 	public static Integer getRandomInteger(int min, int max) {
+		if (min == max) {
+			return min;
+		}
 		return rand.nextInt(max - min) + min;
 	}
 	
@@ -29,6 +32,9 @@ public class Utilities {
 	 * @param The maximum value to take exclusively
 	 */
 	public static Double getRandomDouble(double min, double max) {
+		if (min == max) {
+			return min;
+		}
 		return rand.nextDouble() * (max - min) + min;
 	}
 

@@ -11,7 +11,7 @@ def plot(test_id, particle_histories, path):
 
   plt.title(f"Test {test_id}: adPSO Objective History")
   plt.xlabel("Iteration")
-  plt.ylabel("Objective (Throughput + (1 / Makespan))")
+  plt.ylabel("Objective (Throughput + (1 / Energy Consumption))")
   plt.legend(bbox_to_anchor = (1.25, 0.5), loc='center right')
   plt.tight_layout()
 

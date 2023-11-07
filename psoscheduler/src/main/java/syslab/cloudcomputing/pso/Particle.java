@@ -32,8 +32,6 @@ public class Particle {
 
   private Matrix personalBestPosition;
   private double personalBestObjectiveValue;
-  private double personalBestMakespan;
-  private double personalBestThroughput;
 
   private ArrayList<Double> objectiveHistory = new ArrayList<Double>();
 
@@ -80,19 +78,10 @@ public class Particle {
     this.objectiveHistory.add(this.personalBestObjectiveValue);
 
     if (objective > this.personalBestObjectiveValue) {
-      // System.out.println("BETTER POSITION");
       this.personalBestPosition = this.position.copy();
       this.personalBestObjectiveValue = objective;
-      // TODO remove the following two lines when benchmarking
-      this.personalBestMakespan = this.dataCenter.computeMakespan();
-      this.personalBestThroughput = this.dataCenter.computeThroughput();
       return 1;
     }
-    // } else if (objective < this.personalBestObjectiveValue){
-    //   System.out.println("WORSE POSITION");
-    // } else {
-    //   System.out.println("SAME POSITION");
-    // }
 
     return 0;
   }
@@ -111,9 +100,6 @@ public class Particle {
     // objective function computation
     this.personalBestPosition = this.position;
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
-    // TODO remove
-    this.personalBestMakespan = this.dataCenter.computeMakespan();
-    this.personalBestThroughput = this.dataCenter.computeThroughput();
   }
 
   // Minimum completion time algorithm used for initialization as per https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
@@ -144,9 +130,6 @@ public class Particle {
     updateDataCenter();
     this.personalBestPosition = this.position;
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
-    // TODO remove
-    this.personalBestMakespan = this.dataCenter.computeMakespan();
-    this.personalBestThroughput = this.dataCenter.computeThroughput();
   }
 
   // Initialization strategy used in this paper: https://www.mdpi.com/2079-9292/12/12/2580
@@ -179,9 +162,6 @@ public class Particle {
     updateDataCenter();
     this.personalBestPosition = this.position;
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
-    // TODO remove
-    this.personalBestMakespan = this.dataCenter.computeMakespan();
-    this.personalBestThroughput = this.dataCenter.computeThroughput();
   }
 
   private void updateDataCenter() {
@@ -258,14 +238,6 @@ public class Particle {
 
   public double getPersonalBestObjectiveValue() {
     return this.personalBestObjectiveValue;
-  }
-
-  public double getPersonalBestMakespan() {
-    return this.personalBestMakespan;
-  }
-
-  public double getPersonalBestThroughput() {
-    return this.personalBestThroughput;
   }
 
   public ArrayList<Double> getObjectiveHistory() {
