@@ -3,7 +3,6 @@ package syslab.cloudcomputing.simulation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 
 public class Workload {
   int taskId = 1;
