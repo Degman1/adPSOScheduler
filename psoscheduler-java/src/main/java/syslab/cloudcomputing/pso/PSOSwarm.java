@@ -41,7 +41,7 @@ public class PSOSwarm {
   private void initializeSwarm(int nParticles) {
     this.particles = new ArrayList<Particle>();
     for (int i = 0; i < nParticles; i++) {
-      Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.MCT);
+      Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.HIGH_TASK_HIGH_VM);
       this.particles.add(particle);
     }
 

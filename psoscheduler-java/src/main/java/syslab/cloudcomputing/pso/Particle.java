@@ -158,7 +158,9 @@ public class Particle {
       this.position.setComponent(t.getId() - 1, vm.getId() - 1, 1);
     }
 
-    this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
+    // this.velocity = this.position.copy().multiply(0.2).addJ(0.1);
+    this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
+    this.velocity.randomVelocityInitialization(0, 1);
 
     updateDataCenter();
     this.personalBestPosition = this.position;
