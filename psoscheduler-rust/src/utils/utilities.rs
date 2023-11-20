@@ -23,14 +23,14 @@ pub fn write_objective_history_to_csv(objective_histories: &[[f32; 200]; 20], pa
 
   for history in objective_histories.iter() {
     for i in 0..history.len() {
-      output.push_str(&objective_value.to_string());
-      if (i < history.len() - 1) {
-        output.push_str("\t");
+      output.push_str(&history[i].to_string());
+      if i < history.len() - 1 {
+        output.push('\t');
       }
-      output.push("\n");
+      output.push('\n');
     }
   }
 
-  let mut outfile = File::create(path)?;
-  write!(outfile, output)?;
+  let mut data_file = File::create(path).expect("File creation or opening failed");
+  data_file.write(output.as_bytes()).expect("File write failed");
 }
