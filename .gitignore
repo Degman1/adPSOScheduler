@@ -27,3 +27,4 @@ output_data/
 Braun_et_al/
 .vscode/
 .DS_Store
+psoscheduler-rust/target
