@@ -2,7 +2,7 @@ use rand::Rng;
 use std::fs::File;
 use std::io::Write;
 
-pub fn get_random_integer(min: u8, max: u8) -> u8 {
+pub(crate) fn get_random_integer(min: u8, max: u8) -> u8 {
   if min >= max {
     return 0;
   }
@@ -10,7 +10,7 @@ pub fn get_random_integer(min: u8, max: u8) -> u8 {
   return rng.gen_range(min..max);
 }
 
-pub fn get_random_float(min: f32, max: f32) -> f32 {
+pub(crate) fn get_random_float(min: f32, max: f32) -> f32 {
   if min >= max {
     return 0.0;
   }
@@ -18,7 +18,7 @@ pub fn get_random_float(min: f32, max: f32) -> f32 {
   return rng.gen::<f32>() * (max - min) + min;
 }
 
-pub fn write_objective_history_to_csv(objective_histories: &[[f32; 200]; 20], path: &str) {
+pub(crate) fn write_objective_history_to_csv(objective_histories: &[[f32; 200]; 20], path: &str) {
   let mut output = String::new();
 
   for history in objective_histories.iter() {

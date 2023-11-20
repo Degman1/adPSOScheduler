@@ -1,12 +1,21 @@
-use crate::simulation::task;
-
 mod schedule {
-    mod scheduler;
+    pub(crate) mod scheduler;
 }
 
 mod simulation {
     pub(crate) mod task;
     pub(crate) mod workload;
+    pub(crate) mod virtual_machine;
+    pub(crate) mod data_center;
+}
+
+mod pso {
+    pub(crate) mod particle;
+    pub(crate) mod pso_swarm;
+}
+
+mod utils {
+    pub(crate) mod utilities;
 }
 
 fn main() {
@@ -18,4 +27,7 @@ fn main() {
     wk.add_task(t);
     wk.add_task(t2);
     println!("{}", wk);
+    let vm = simulation::virtual_machine::VirtualMachine::new(200, 300.0);
+    let vm2 = simulation::virtual_machine::VirtualMachine::new(400, 500.0);
+    println!("{} {}", vm, vm2);
 }

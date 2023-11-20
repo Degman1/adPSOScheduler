@@ -1,24 +1,24 @@
 use core::fmt;
-use std::{sync::atomic::{AtomicUsize, Ordering}, fmt::Display};
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use super::task::Task;
 
 static WORKLOAD_ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
 
-pub struct Workload {
-  pub workload_id: usize,
+pub(crate) struct Workload {
+  pub id: usize,
   pub tasks: Vec<Task>
 }
 
 impl Workload {
   pub fn new() -> Workload {
     Workload {
-      workload_id: WORKLOAD_ID_COUNTER.fetch_add(1, Ordering::Relaxed),
+      id: WORKLOAD_ID_COUNTER.fetch_add(1, Ordering::Relaxed),
       tasks: Vec::new() }
   }
 
   pub fn add_task(&mut self, mut t: Task) {
-    t.workload_id = self.workload_id;
+    t.workload_id = self.id;
     self.tasks.push(t);
   }
 }
@@ -32,6 +32,6 @@ impl fmt::Display for Workload {
         output.push_str(", ");
       }
     }
-    return write!(f, "Workload{}: {}", self.workload_id, output);
+    write!(f, "Workload{}: {}", self.id, output)
   }
 }
