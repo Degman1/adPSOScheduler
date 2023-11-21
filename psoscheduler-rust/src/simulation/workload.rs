@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use super::task::Task;
 
-static WORKLOAD_ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
+static WORKLOAD_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 pub(crate) struct Workload {
   pub id: usize,

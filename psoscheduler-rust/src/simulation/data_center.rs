@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use super::virtual_machine::VirtualMachine;
 use super::task::Task;
 
-static DATA_CENTER_ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
+static DATA_CENTER_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 pub(crate) struct DataCenter {
   pub id: usize,
@@ -45,7 +45,8 @@ impl DataCenter {
     (task.millions_of_instructions as f32) / (vm.millions_of_instructions_per_second as f32)
   }
 
-  pub fn add_execution_time_to_virtual_machine(&mut self, task: Task, vm: VirtualMachine) {
+  pub fn add_execution_time_to_virtual_machine(&mut self, task: &Task, vm_id: usize) {
+    let vm = &self.virtual_machines[vm_id];
     let current_execution_time: f32;
     match self.virtual_machine_ready_time.get(&task.id) {
       Some(time) => current_execution_time = *time,
@@ -56,7 +57,7 @@ impl DataCenter {
     self.virtual_machine_ready_time.insert(vm.id, new_execution_time);
     self.task_count += 1;
     self.total_millions_of_instructions += task.millions_of_instructions;
-  }
+  } 
 
   fn compute_makespan(&self) -> f32 {
     match self.virtual_machine_ready_time
@@ -68,7 +69,7 @@ impl DataCenter {
       }
   }
 
-  fn _compute_energy_consumption_KW(&self, makespan: f32) -> f32 {
+  fn _compute_energy_consumption_kw(&self, makespan: f32) -> f32 {
     let mut energy_consumption: f32 = 0.0;
 
     for (vm_id, millions_of_instructions) in self.virtual_machine_ready_time.iter() {
@@ -86,22 +87,22 @@ impl DataCenter {
     return energy_consumption;
   }
 
-  fn compute_energy_consumption_KW(&self) -> f32 {
+  fn compute_energy_consumption_kw(&self) -> f32 {
     let makespan = self.compute_makespan();
-    self._compute_energy_consumption_KW(makespan)
+    self._compute_energy_consumption_kw(makespan)
   }
 
-  pub fn compute_objective(&self) -> f32{
+  pub fn compute_objective(&self) -> f32 {
     let makespan = self.compute_makespan();
     let throughput = makespan / (self.task_count as f32);
-    let KW = self._compute_energy_consumption_KW(makespan);
-    let hW = KW * 10.0;  // hectowatts
-    let average_watts_per_task = hW / (self.task_count as f32);
+    let kw = self._compute_energy_consumption_kw(makespan);
+    let hw = kw * 10.0;  // hectowatts
+    let average_watts_per_task = hw / (self.task_count as f32);
     // Scale the energy consumption to an appropriate weight in the objective function
     return throughput + (2.0 / average_watts_per_task);
   }
 
-  pub fn get_min_EET_virtual_machine(&self, task: &Task) -> &VirtualMachine {
+  pub fn get_min_eet_virtual_machine(&self, task: &Task) -> usize {
     let cmp = |a: &(&usize, &f32), b: &(&usize, &f32)| -> std::cmp::Ordering {
       let a_vm = &self.virtual_machines[*a.0];
       let b_vm = &self.virtual_machines[*b.0];
@@ -114,7 +115,7 @@ impl DataCenter {
       .iter()
       .min_by(cmp)
       .map(|(k, _v)| k) {
-        Some(vm) => &self.virtual_machines[*vm],
+        Some(vm) => *vm,
         None => panic!("No vm with a minimum expected execution time was found")
       }
   }
@@ -124,6 +125,7 @@ impl fmt::Display for DataCenter {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let mut output: String = String::new();
     for (key, value) in self.virtual_machine_ready_time.iter() {
+      output.push_str("VM");
       output.push_str(&key.to_string());
       output.push_str("=>");
       output.push_str(&value.to_string());

@@ -1,7 +1,7 @@
 use core::fmt;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-static TASK_ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
+static TASK_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 pub(crate) struct Task {
   pub id: usize,
