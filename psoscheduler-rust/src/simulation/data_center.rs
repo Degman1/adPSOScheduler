@@ -58,7 +58,66 @@ impl DataCenter {
     self.total_millions_of_instructions += task.millions_of_instructions;
   }
 
-  
+  fn compute_makespan(&self) -> f32 {
+    match self.virtual_machine_ready_time
+      .iter()
+      .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
+      .map(|(_k, v)| v) {
+        Some(makespan) => *makespan,
+        None => 0.0
+      }
+  }
+
+  fn _compute_energy_consumption_KW(&self, makespan: f32) -> f32 {
+    let mut energy_consumption: f32 = 0.0;
+
+    for (vm_id, millions_of_instructions) in self.virtual_machine_ready_time.iter() {
+      let vm = &self.virtual_machines[*vm_id];
+      let mut machine_energy_consumption = millions_of_instructions * vm.active_state_joules_per_million_instructions;
+      machine_energy_consumption += (makespan - millions_of_instructions) * vm.get_idle_state_joules_per_million_instructions();
+      machine_energy_consumption *= vm.millions_of_instructions_per_second as f32;
+      energy_consumption += machine_energy_consumption;
+    }
+
+    energy_consumption /= self.total_millions_of_instructions as f32;
+
+    energy_consumption /= 1000.0;
+
+    return energy_consumption;
+  }
+
+  fn compute_energy_consumption_KW(&self) -> f32 {
+    let makespan = self.compute_makespan();
+    self._compute_energy_consumption_KW(makespan)
+  }
+
+  pub fn compute_objective(&self) -> f32{
+    let makespan = self.compute_makespan();
+    let throughput = makespan / (self.task_count as f32);
+    let KW = self._compute_energy_consumption_KW(makespan);
+    let hW = KW * 10.0;  // hectowatts
+    let average_watts_per_task = hW / (self.task_count as f32);
+    // Scale the energy consumption to an appropriate weight in the objective function
+    return throughput + (2.0 / average_watts_per_task);
+  }
+
+  pub fn get_min_EET_virtual_machine(&self, task: &Task) -> &VirtualMachine {
+    let cmp = |a: &(&usize, &f32), b: &(&usize, &f32)| -> std::cmp::Ordering {
+      let a_vm = &self.virtual_machines[*a.0];
+      let b_vm = &self.virtual_machines[*b.0];
+      let a_eet = self.virtual_machine_ready_time.get(a.0).unwrap() + self.get_task_execution_time(task, a_vm);
+      let b_eet = self.virtual_machine_ready_time.get(b.0).unwrap() + self.get_task_execution_time(task, b_vm);
+      return a_eet.partial_cmp(&b_eet).unwrap();
+    };
+
+    match self.virtual_machine_ready_time
+      .iter()
+      .min_by(cmp)
+      .map(|(k, _v)| k) {
+        Some(vm) => &self.virtual_machines[*vm],
+        None => panic!("No vm with a minimum expected execution time was found")
+      }
+  }
 }
 
 impl fmt::Display for DataCenter {

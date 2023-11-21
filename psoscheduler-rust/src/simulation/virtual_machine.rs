@@ -20,6 +20,10 @@ impl VirtualMachine {
       active_state_joules_per_million_instructions: active_state_joules_per_million_instructions,
     }
   }
+
+  pub fn get_idle_state_joules_per_million_instructions(&self) -> f32 {
+    self.active_state_joules_per_million_instructions * 0.6
+  }
 }
 
 impl fmt::Display for VirtualMachine {
