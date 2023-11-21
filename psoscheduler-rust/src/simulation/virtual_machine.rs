@@ -7,12 +7,12 @@ static VIRTUAL_MACHINE_ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
 pub(crate) struct VirtualMachine {
   pub id: usize,
   pub data_center_id: usize,
-  pub millions_of_instructions_per_second: i32,
+  pub millions_of_instructions_per_second: u32,
   pub active_state_joules_per_million_instructions: f32,
 }
 
 impl VirtualMachine {
-  pub fn new(millions_of_instructions_per_second: i32, active_state_joules_per_million_instructions: f32) -> VirtualMachine {
+  pub fn new(millions_of_instructions_per_second: u32, active_state_joules_per_million_instructions: f32) -> VirtualMachine {
     VirtualMachine { 
       id: VIRTUAL_MACHINE_ID_COUNTER.fetch_add(1, Ordering::Relaxed),
       data_center_id: 0,
@@ -39,3 +39,5 @@ impl PartialEq for VirtualMachine {
     self.id == other.id
   }
 }
+
+impl Eq for VirtualMachine { }

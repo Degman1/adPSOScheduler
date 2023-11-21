@@ -30,4 +30,6 @@ fn main() {
     let vm = simulation::virtual_machine::VirtualMachine::new(200, 300.0);
     let vm2 = simulation::virtual_machine::VirtualMachine::new(400, 500.0);
     println!("{} {}", vm, vm2);
+    let mut dc = simulation::data_center::DataCenter::new();
+    
 }
