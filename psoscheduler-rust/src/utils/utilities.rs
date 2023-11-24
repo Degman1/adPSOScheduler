@@ -2,7 +2,7 @@ use rand::Rng;
 use std::fs::File;
 use std::io::Write;
 
-pub(crate) fn get_random_integer(min: u8, max: u8) -> u8 {
+pub(crate) fn get_random_integer(min: usize, max: usize) -> usize {
   if min >= max {
     return 0;
   }

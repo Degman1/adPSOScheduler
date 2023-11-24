@@ -23,6 +23,10 @@ mod utils {
 fn main() {
   env::set_var("RUST_BACKTRACE", "1");
 
+  basic_tests();
+}
+
+fn basic_tests() {
   println!("Hello, world!");
   let t = simulation::task::Task::new(500);
   let t2 = simulation::task::Task::new(600);
@@ -44,4 +48,11 @@ fn main() {
   dc.add_execution_time_to_virtual_machine(&wk.tasks[1], 1);
   let obj = dc.compute_objective();
   println!("{}", obj);
+  let t3 = simulation::task::Task::new(100);
+  let t4 = simulation::task::Task::new(50);
+  wk.add_task(t3);
+  wk.add_task(t4);
+  for t in wk.get_sorted_tasks().iter() {
+    println!("{}", t);
+  }
 }

@@ -99,7 +99,7 @@ public class Particle {
 
     // Must compute the local best after building the task to vm mapping in the line above for accurate
     // objective function computation
-    this.personalBestPosition = this.position;
+    this.personalBestPosition = this.position.copy();
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
   }
 
@@ -116,10 +116,12 @@ public class Particle {
     ArrayList<Task> tasks = this.workload.getSortedTasks(true);
 
     for (Task t : tasks) {
-      VirtualMachine vm = this.dataCenter.getVmWithMinEET(t);
+      VirtualMachine vm;
       if (Utilities.getRandomDouble(0, 1) < 0.25) {
         int vmId = Utilities.getRandomInteger(0, this.dataCenter.getVirtualMachineCount() - 1);
         vm = this.dataCenter.getVirtualMachineById(vmId);
+      } else {
+        vm = this.dataCenter.getVmWithMinEET(t);
       }
       this.position.setComponent(t.getId() - 1, vm.getId() - 1, 1);
       this.dataCenter.addExecutionTimeToVirtualMachine(t, vm);
@@ -128,8 +130,8 @@ public class Particle {
     this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
     this.velocity.randomVelocityInitialization(0, 1);
 
-    updateDataCenter();
-    this.personalBestPosition = this.position;
+    // updateDataCenter(); // This was extra -- unnecessary
+    this.personalBestPosition = this.position.copy();
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
   }
 
@@ -163,7 +165,7 @@ public class Particle {
     this.velocity.randomVelocityInitialization(0, 1);
 
     updateDataCenter();
-    this.personalBestPosition = this.position;
+    this.personalBestPosition = this.position.copy();
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
   }
 

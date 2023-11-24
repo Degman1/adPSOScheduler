@@ -21,6 +21,11 @@ impl Workload {
     t.workload_id = self.id;
     self.tasks.push(t);
   }
+
+  pub fn get_sorted_tasks(&mut self) -> &Vec<Task> {
+    self.tasks.sort();
+    &self.tasks
+  }
 }
 
 impl fmt::Display for Workload {
