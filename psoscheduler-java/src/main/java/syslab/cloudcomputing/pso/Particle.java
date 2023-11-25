@@ -185,9 +185,9 @@ public class Particle {
     double r2 = Utilities.getRandomDouble(0, 1);
 
     // System.out.println("\nParticle " + this.id + " Velocity (before): " + this.velocity);
-    Matrix previousVelocityFactor = this.velocity.copy().multiply(w);
-    Matrix localExploration = this.personalBestPosition.copy().subtract(this.position).multiply(Particle.c1).multiply(r1);
-    Matrix globalExploration = this.globalBestPosition.copy().subtract(this.position).multiply(Particle.c2).multiply(r2);
+    Matrix previousVelocityFactor = this.velocity.multiply(w);
+    Matrix localExploration = this.personalBestPosition.copy().subtract(this.position).multiply(Particle.c1 * r1);
+    Matrix globalExploration = this.globalBestPosition.copy().subtract(this.position).multiply(Particle.c2 * r2);
     this.velocity = previousVelocityFactor.add(localExploration).add(globalExploration)
                                           .enforceElementwiseBound(Particle.maxAbsoluteVelocity);
     // System.out.println("Particle " + this.id + " Velocity (after): " + this.velocity);
