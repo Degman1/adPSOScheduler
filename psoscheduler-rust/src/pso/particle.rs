@@ -21,6 +21,7 @@ struct Particle {
   pub task_vm_mapping: HashMap<usize, usize>,
   pub personal_best_position: Array2<f32>,
   pub personal_best_objective: f32,
+  pub objective_history: Vec<f32>,
 }
 
 impl Particle {
@@ -50,6 +51,7 @@ impl Particle {
     let velocity:Array2<f32>  = Array::random((workload.tasks.len(), data_center.virtual_machines.len()), Uniform::new(0., 1.));
     let personal_best_position: Array2<f32> = position.clone();
     let personal_best_objective: f32 = data_center.compute_objective();
+    let objective_history: Vec<f32> = Vec::new();
 
     Particle {
       id: PARTICLE_ID_COUNTER.fetch_add(1, Ordering::Relaxed),
@@ -58,10 +60,28 @@ impl Particle {
       task_vm_mapping: task_vm_mapping,
       personal_best_position: personal_best_position,
       personal_best_objective: personal_best_objective,
+      objective_history: objective_history,
     }
   }
 
-  fn update_data_center(&self, workload: Workload, data_center: &mut DataCenter) {
+  pub fn run_iteration(&mut self, workload: &Workload, data_center: &mut DataCenter, w: f32, global_best_position: &Array2<f32>) -> u8 {
+    self.update_velocity(w, global_best_position);
+    self.update_position();
+
+    self.update_data_center(workload, data_center);
+    let objective: f32 = data_center.compute_objective();
+    self.objective_history.push(objective);
+
+    if objective > self.personal_best_objective {
+      self.personal_best_objective = objective;
+      self.personal_best_position = self.position.clone();
+      return 1;
+    }
+
+    return 0;
+  }
+
+  fn update_data_center(&self, workload: &Workload, data_center: &mut DataCenter) {
     data_center.reset_virtual_machine_ready_time();
 
     let mut i: usize = 0;
@@ -99,13 +119,6 @@ impl Particle {
 
   fn update_position(&mut self) {
     self.position.mapv_inplace(|_a| 0.);
-    // let maxes  = self.velocity.map_axis(Axis(1), 
-    //   |view| *view.iter()
-    //                                                      .enumerate()
-    //                                                      .max_by_key(|(_, v)| OrderedFloat(*v)))
-    //                                                      .map(|(idx, value)| idx);
-
-    // }
     let mut i: usize = 0;
     for row in self.velocity.rows() {
       let mut max_col: usize = 0;
@@ -120,7 +133,4 @@ impl Particle {
       i += 1
     }
   }
-
-  fn position_max_copy<T: Ord + Copy>(slice: &[T]) -> Option<usize> {
-    slice.iter().enumerate().max_by_key(|(_, &value)| value).map(|(idx, _)| idx)
 }
