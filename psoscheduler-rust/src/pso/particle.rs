@@ -1,11 +1,9 @@
 use ndarray::Array;
 use ndarray::Array2;
-use ndarray::Axis;
 use ndarray_rand::RandomExt;
 use ndarray_rand::rand_distr::Uniform;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::collections::HashMap;
-use ordered_float::OrderedFloat;
 
 use crate::utils::utilities;
 use crate::simulation::data_center::DataCenter;
@@ -14,7 +12,7 @@ use crate::simulation::task::Task;
 
 static PARTICLE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-struct Particle {
+pub struct Particle {
   pub id: usize,
   pub position: Array2<f32>,
   pub velocity: Array2<f32>,
@@ -124,13 +122,26 @@ impl Particle {
       let mut max_col: usize = 0;
       let mut max_val: f32 = 0.;
       for (j, e) in row.indexed_iter() {
-        if e.partial_cmp(&max_val).unwrap() == std::cmp::Ordering::Greater {
+        if e > &max_val {
           max_col = j;
           max_val = *e;
         }
       }
       self.position[[i, max_col]] = 1.;
       i += 1
+    }
+  }
+
+  pub fn update_task_vm_mapping(&mut self) {
+    self.task_vm_mapping.clear();
+    let mut i: usize = 0;
+    for row in self.position.rows() {
+      for (j, e) in row.indexed_iter() {
+        if *e > 0.9 {
+          self.task_vm_mapping.insert(i, j);
+        }
+      }
+      i += 1;
     }
   }
 }
