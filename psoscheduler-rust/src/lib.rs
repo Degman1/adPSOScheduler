@@ -1,19 +1,19 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-mod simulation {
-  pub(crate) mod task;
-  pub(crate) mod workload;
-  pub(crate) mod virtual_machine;
-  pub(crate) mod data_center;
+pub mod simulation {
+  pub mod task;
+  pub mod workload;
+  pub mod virtual_machine;
+  pub mod data_center;
 }
 
-mod pso {
-  pub(crate) mod particle;
-  pub(crate) mod pso_swarm;
+pub mod pso {
+  pub mod particle;
+  pub mod pso_swarm;
 }
 
-mod utils {
-  pub(crate) mod utilities;
+pub mod utils {
+  pub mod utilities;
 }
 
 pub fn run_pso_algorithm(workload: simulation::workload::Workload, data_center: simulation::data_center::DataCenter) {

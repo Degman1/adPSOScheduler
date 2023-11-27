@@ -103,4 +103,18 @@ impl PSOSwarm {
       i += 1;
     }
   }
+
+  pub fn get_particle_objective_history(&self) -> [[f32; 200]; 20] {
+    let mut histories: [[f32; 200]; 20] = [[0.; 200]; 20];
+    let mut i: usize = 0;
+    for p in self.particles.iter() {
+      let mut j: usize = 0;
+      for cost in p.objective_history.iter() {
+        histories[i][j] = *cost;
+        j += 1;
+      }
+      i += 1;
+    }
+    histories
+  }
 }

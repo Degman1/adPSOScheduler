@@ -27,8 +27,8 @@ pub fn write_objective_history_to_csv(objective_histories: &[[f32; 200]; 20], pa
       if i < history.len() - 1 {
         output.push('\t');
       }
-      output.push('\n');
     }
+    output.push('\n');
   }
 
   let mut data_file = File::create(path).expect("File creation or opening failed");
