@@ -7,8 +7,8 @@ fn main() {
 }
 
 fn log_basic_pso() {
-  let workload: psoscheduler::simulation::workload::Workload = psoscheduler::build_basic_workload();
-  let data_center: psoscheduler::simulation::data_center::DataCenter = psoscheduler::build_basic_data_center();
+  let workload: psoscheduler::simulation::workload::Workload = psoscheduler::build_test11_workload();
+  let data_center: psoscheduler::simulation::data_center::DataCenter = psoscheduler::build_test11_data_center();
   let mut swarm = psoscheduler::pso::pso_swarm::PSOSwarm::new(workload, data_center);
   swarm.run_pso_algorithm();
   // Save the cost history to local file

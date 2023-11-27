@@ -56,6 +56,7 @@ impl PSOSwarm {
 
   pub fn run_pso_algorithm(&mut self) {
     for iteration in 0..self.max_iterations {
+      println!("{}", iteration);
       self.run_iteration(iteration);
     }
 
