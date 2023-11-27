@@ -9,7 +9,7 @@
 
 jdkPath=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/bin/java
 if [[ $4 -ne 0 ]]; then
-  echo "Using custom jdk path..."
+  echo "Using custom jdk path"
   jdkPath=$4
 fi
 

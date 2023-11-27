@@ -5,8 +5,23 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+# [[bin]]
+# name = "psoscheduler_bin"
+# path = "src/main.rs"
+
+[lib]
+name = "psoscheduler"
+path = "src/lib.rs"
+
 [dependencies]
 rand="0.8.5"
 ndarray="0.15.6"
 ndarray-rand="0.14.0"
 ordered-float="4.1.1"
+
+[dev-dependencies]
+criterion="0.3"
+
+[[bench]]
+name = "rust_pso_benchmark"
+harness = false

@@ -116,12 +116,13 @@ impl Particle {
   }
 
   fn update_position(&mut self) {
-    self.position.mapv_inplace(|_a| 0.);
+    // self.position.mapv_inplace(|_a| 0.);
     let mut i: usize = 0;
     for row in self.velocity.rows() {
       let mut max_col: usize = 0;
       let mut max_val: f32 = 0.;
       for (j, e) in row.indexed_iter() {
+        self.position[[i, j]] = 0.;
         if e > &max_val {
           max_col = j;
           max_val = *e;
