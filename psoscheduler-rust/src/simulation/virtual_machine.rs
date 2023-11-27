@@ -2,7 +2,7 @@ use core::fmt;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::hash::{Hash, Hasher};
 
-static VIRTUAL_MACHINE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
+pub static VIRTUAL_MACHINE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 pub struct VirtualMachine {
   pub id: usize,

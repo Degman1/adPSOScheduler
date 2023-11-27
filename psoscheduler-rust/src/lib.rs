@@ -1,3 +1,5 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 mod simulation {
   pub(crate) mod task;
   pub(crate) mod workload;
@@ -21,7 +23,7 @@ pub fn run_pso_algorithm(workload: simulation::workload::Workload, data_center: 
 
 pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
   let n_vms: usize = 100;
-  let vm_mips_low: usize = 1000; 
+  let vm_mips_low: usize = 1000;
   let vm_mips_high: usize = 5000;
   let active_state_joules_per_mi_low: f32 = 200.;
   let active_state_joules_per_mi_high: f32 = 1000.;
@@ -34,6 +36,8 @@ pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
     let vm = simulation::virtual_machine::VirtualMachine::new(mi, asj);
     data_center.add_virtual_machine(vm)
   }
+
+  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
 
   data_center
 }
@@ -51,25 +55,33 @@ pub fn build_test11_workload() -> simulation::workload::Workload {
     workload.add_task(task);
   }
 
+  simulation::task::TASK_ID_COUNTER.store(0, Ordering::Relaxed);
+
   workload
 }
 
-pub fn pso_basic_test() {
+pub fn build_basic_workload() -> simulation::workload::Workload {
   let t = simulation::task::Task::new(500);
   let t2 = simulation::task::Task::new(600);
   let mut wk = simulation::workload::Workload::new();
   wk.add_task(t);
   wk.add_task(t2);
 
+  simulation::task::TASK_ID_COUNTER.store(0, Ordering::Relaxed);
+
+  wk
+}
+
+pub fn build_basic_data_center() -> simulation::data_center::DataCenter {
   let vm = simulation::virtual_machine::VirtualMachine::new(200, 300.0);
   let vm2 = simulation::virtual_machine::VirtualMachine::new(400, 500.0);
   let mut dc = simulation::data_center::DataCenter::new();
   dc.add_virtual_machine(vm);
   dc.add_virtual_machine(vm2);
 
-  let mut swarm = pso::pso_swarm::PSOSwarm::new(wk, dc);
-  swarm.run_pso_algorithm();
-  println!("{:?}", swarm.global_best_task_vm_mapping);
+  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
+
+  dc
 }
 
 pub fn basic_tests() {

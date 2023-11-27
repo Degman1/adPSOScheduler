@@ -1,7 +1,7 @@
 use core::fmt;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-static TASK_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
+pub static TASK_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 #[derive(Hash, PartialEq, Eq)]
 pub struct Task {
@@ -17,6 +17,10 @@ impl Task {
       workload_id: 0,
       millions_of_instructions: millions_of_instructions
     }
+  }
+
+  pub fn get_id(&self) -> usize {
+    self.id - self.workload_id
   }
 }
 

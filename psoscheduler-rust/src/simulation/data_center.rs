@@ -104,6 +104,7 @@ impl DataCenter {
 
   pub fn get_min_eet_virtual_machine(&self, task: &Task) -> usize {
     let cmp = |a: &(&usize, &f32), b: &(&usize, &f32)| -> std::cmp::Ordering {
+      
       let a_vm = &self.virtual_machines[*a.0];
       let b_vm = &self.virtual_machines[*b.0];
       let a_eet = self.virtual_machine_ready_time.get(a.0).unwrap() + self.get_task_execution_time(task, a_vm);
