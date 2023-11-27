@@ -23,10 +23,10 @@ pub struct Particle {
 }
 
 impl Particle {
-  const c1: f32 = 2.;
-  const c2: f32 = 1.49455;
+  const C1: f32 = 2.;
+  const C2: f32 = 1.49455;
 
-  const max_absolute_velocity: f32 = 10.;
+  const MAX_ABS_VELOCITY: f32 = 10.;
 
   pub fn new(workload: &mut Workload, data_center: &mut DataCenter) -> Particle {
     let mut position: Array2<f32> = Array::zeros((workload.tasks.len(), data_center.virtual_machines.len()));
@@ -103,13 +103,13 @@ impl Particle {
 
     self.velocity.mapv_inplace(|a| a * w);
     let local_exploration: Array2<f32> = (&self.personal_best_position - &self.position)
-                                          .mapv(|a| a * Particle::c1 * r1);
+                                          .mapv(|a| a * Particle::C1 * r1);
     let global_exploration: Array2<f32> = (global_best_position - &self.position)
-                                          .mapv(|a| a * Particle::c2 * r2);
+                                          .mapv(|a| a * Particle::C2 * r2);
     self.velocity += &(local_exploration + &global_exploration);
     self.velocity.mapv_inplace(|a| -> f32 {
-      if a > Particle::max_absolute_velocity {
-        return utilities::get_random_float(0., Particle::max_absolute_velocity);
+      if a > Particle::MAX_ABS_VELOCITY {
+        return utilities::get_random_float(0., Particle::MAX_ABS_VELOCITY);
       }
       return a;
     });

@@ -23,7 +23,23 @@ mod utils {
 fn main() {
   env::set_var("RUST_BACKTRACE", "1");
 
-  basic_tests();
+  pso_test();
+}
+
+fn pso_test() {
+  let t = simulation::task::Task::new(500);
+  let t2 = simulation::task::Task::new(600);
+  let mut wk = simulation::workload::Workload::new();
+  wk.add_task(t);
+  wk.add_task(t2);
+
+  let vm = simulation::virtual_machine::VirtualMachine::new(200, 300.0);
+  let vm2 = simulation::virtual_machine::VirtualMachine::new(400, 500.0);
+  let mut dc = simulation::data_center::DataCenter::new();
+  dc.add_virtual_machine(vm);
+  dc.add_virtual_machine(vm2);
+
+  let mut swarm = pso::pso_swarm::PSOSwarm::new(wk, dc);
 }
 
 fn basic_tests() {

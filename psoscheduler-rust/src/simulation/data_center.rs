@@ -7,7 +7,7 @@ use super::task::Task;
 
 static DATA_CENTER_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-pub(crate) struct DataCenter {
+pub struct DataCenter {
   pub id: usize,
   pub virtual_machines: Vec<VirtualMachine>,
   pub task_count: u32,

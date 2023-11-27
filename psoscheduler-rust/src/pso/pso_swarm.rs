@@ -1,11 +1,11 @@
-use ndarray::{Array2, Data};
+use ndarray::Array2;
 use std::collections::HashMap;
 
 use crate::pso::particle::Particle;
 use crate::simulation::data_center::DataCenter;
 use crate::simulation::workload::Workload;
 
-struct PSOSwarm {
+pub struct PSOSwarm {
   pub max_iterations: u32,
   pub n_particles: u32,
   pub p_s: f32,
@@ -19,8 +19,8 @@ struct PSOSwarm {
 }
 
 impl PSOSwarm {
-  const w1: f32 = 0.9;
-  const w2: f32 = 0.4;
+  const W1: f32 = 0.9;
+  const W2: f32 = 0.4;
 
   pub fn new(mut workload: Workload, mut data_center: DataCenter) -> PSOSwarm {
     let max_iterations: u32 = 200;
@@ -63,9 +63,9 @@ impl PSOSwarm {
   }
 
   fn run_iteration(&mut self, iteration: u32) {
-    self.w = ((PSOSwarm::w1 - PSOSwarm::w1) / self.p_s) + 
+    self.w = ((PSOSwarm::W1 - PSOSwarm::W1) / self.p_s) + 
              (((self.max_iterations - (iteration)) / self.max_iterations) as f32) * 
-             ((PSOSwarm::w1 - (PSOSwarm::w1 - PSOSwarm::w2)) / self.p_s);
+             ((PSOSwarm::W1 - (PSOSwarm::W1 - PSOSwarm::W2)) / self.p_s);
 
     let mut ss: f32 = 0.;
 

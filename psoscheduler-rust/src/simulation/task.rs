@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 static TASK_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 #[derive(Hash, PartialEq, Eq)]
-pub(crate) struct Task {
+pub struct Task {
   pub id: usize,
   pub workload_id: usize,
   pub millions_of_instructions: u32

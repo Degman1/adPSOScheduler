@@ -5,7 +5,7 @@ use super::task::Task;
 
 static WORKLOAD_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-pub(crate) struct Workload {
+pub struct Workload {
   pub id: usize,
   pub tasks: Vec<Task>
 }

@@ -4,7 +4,7 @@ use std::hash::{Hash, Hasher};
 
 static VIRTUAL_MACHINE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-pub(crate) struct VirtualMachine {
+pub struct VirtualMachine {
   pub id: usize,
   pub data_center_id: usize,
   pub millions_of_instructions_per_second: u32,
