@@ -130,8 +130,7 @@ public class Particle {
     
     this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
     this.velocity.randomVelocityInitialization(0, 1);
-
-    // updateDataCenter(); // This was extra -- unnecessary
+    
     this.personalBestPosition = this.position.copy();
     this.personalBestObjectiveValue = this.dataCenter.computeObjective();
   }

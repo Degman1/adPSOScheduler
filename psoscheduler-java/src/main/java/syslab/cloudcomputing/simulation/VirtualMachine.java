@@ -43,7 +43,7 @@ public class VirtualMachine {
 	}
 
   public String toString() {
-    return String.format("(VM%d: %d mips, %d J/MI)", this.id, this.millionsOfInstructionsPerSecond, this.activeStateJoulesPerMillionInstructions);
+    return String.format("(VM%d: %d mips, %f J/MI)", this.id, this.millionsOfInstructionsPerSecond, this.activeStateJoulesPerMillionInstructions);
   }
 
   public int getId() {

@@ -1,6 +1,6 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use psoscheduler;
-use std::env;
+// use std::env;
 
 pub fn criterion_benchmark(c: &mut Criterion) {
   // env::set_var("RUST_BACKTRACE", "full");

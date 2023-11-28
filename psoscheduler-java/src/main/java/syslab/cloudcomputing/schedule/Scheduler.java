@@ -3,6 +3,7 @@ package syslab.cloudcomputing.schedule;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import syslab.cloudcomputing.utils.Utilities;
@@ -60,7 +61,7 @@ public class Scheduler {
 
     public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordObjectiveHistory) {
         PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
-        swarm.runPSOAlgorithm();
+        HashMap<Task, VirtualMachine> mapping = swarm.runPSOAlgorithm();
 
         System.out.println("Global Best Objective: " + swarm.globalBestObjectiveValue);
         
@@ -72,7 +73,8 @@ public class Scheduler {
         System.out.println("Global Best Makespan: " + dataCenter.computeMakespan() + " sec");
         System.out.println("Global Best Throughput: " + dataCenter.computeThroughput() + " tasks/sec");
         System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumptionKW() + " KW");
-        
+        // System.out.println("Global Best Mapping: " + mapping);
+        // System.out.println(dataCenter);
         System.out.print("Saving objective history to objective_history.csv... ");
         
         if (recordObjectiveHistory) {

@@ -27,35 +27,45 @@ pub fn run_pso_algorithm(workload: simulation::workload::Workload, data_center: 
   swarm.run_pso_algorithm();
 }
 
+pub fn reset_workload_id_counter() {
+  simulation::task::TASK_ID_COUNTER.store(0, Ordering::Relaxed);
+}
+
+pub fn reset_data_center_id_counter() {
+  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
+}
+
 pub fn build_test1_data_center() -> simulation::data_center::DataCenter {
+  reset_data_center_id_counter();
+
   let mut data_center = simulation::data_center::DataCenter::new();
 
   let vm = simulation::virtual_machine::VirtualMachine::new(100, 500.);
   data_center.add_virtual_machine(vm);
 
-  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
-
   data_center
 }
 
 pub fn build_test1_workload() -> simulation::workload::Workload {
+  reset_workload_id_counter();
+
   let mut workload = simulation::workload::Workload::new();
 
   let task = simulation::task::Task::new(10);
-    workload.add_task(task);
+  workload.add_task(task);
 
   workload
 }
 
 pub fn build_test2_data_center() -> simulation::data_center::DataCenter {
+  reset_data_center_id_counter();
+
   let mut data_center = simulation::data_center::DataCenter::new();
 
   let vm1 = simulation::virtual_machine::VirtualMachine::new(50, 500.);
   let vm2 = simulation::virtual_machine::VirtualMachine::new(100, 500.);
   data_center.add_virtual_machine(vm1);
   data_center.add_virtual_machine(vm2);
-
-  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
 
   data_center
 }
@@ -65,6 +75,8 @@ pub fn build_test2_workload() -> simulation::workload::Workload {
 }
 
 pub fn build_test3_data_center() -> simulation::data_center::DataCenter {
+  reset_data_center_id_counter();
+
   let n_vms: usize = 36;
   let vm_mips_high: usize = 100;
   let vm_mips_low: usize = 50;
@@ -72,7 +84,7 @@ pub fn build_test3_data_center() -> simulation::data_center::DataCenter {
   let vm_high_id: usize = utils::utilities::get_random_integer(0, n_vms);
 
   let mut data_center = simulation::data_center::DataCenter::new();
-  println!("Chose {}", vm_high_id);
+  
   for i in 0..n_vms {
     if i == vm_high_id {
       let vm = simulation::virtual_machine::VirtualMachine::new(vm_mips_high as u32, 500.);
@@ -84,13 +96,53 @@ pub fn build_test3_data_center() -> simulation::data_center::DataCenter {
     }
   }
 
-  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
-
   data_center
 }
 
 pub fn build_test3_workload() -> simulation::workload::Workload {
   build_test1_workload()
+}
+
+pub fn build_test4_data_center() -> simulation::data_center::DataCenter {
+  reset_data_center_id_counter();
+
+  let n_vms: usize = 36;
+  let vm_mips_high: usize = 100;
+  let vm_mips_low: usize = 20;
+
+  let mut data_center = simulation::data_center::DataCenter::new();
+
+  for i in 0..n_vms {
+    let mips: u32 = utils::utilities::get_random_integer(vm_mips_low, vm_mips_high) as u32;
+    let vm = simulation::virtual_machine::VirtualMachine::new(mips, 500.);
+    data_center.add_virtual_machine(vm);
+  }
+
+  data_center
+}
+
+pub fn build_test4_workload() -> simulation::workload::Workload {
+  build_test1_workload()
+}
+
+pub fn build_test5_data_center() -> simulation::data_center::DataCenter {
+  build_test4_data_center()
+}
+
+pub fn build_test5_workload() -> simulation::workload::Workload {
+  reset_workload_id_counter();
+
+  let n_tasks: usize = 5;
+  let task_mi: u32 = 10;
+
+  let mut workload = simulation::workload::Workload::new();
+
+  for _ in 0..n_tasks {
+    let task = simulation::task::Task::new(task_mi);
+    workload.add_task(task);
+  }
+
+  workload
 }
 
 pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
@@ -196,6 +248,13 @@ pub fn run_test_pso_main() {
     "1" => build_test1_workload(),
     "2" => build_test2_workload(),
     "3" => build_test3_workload(),
+    "4" => build_test4_workload(),
+    // "5" => build_test5_workload(),
+    // "6" => build_test6_workload(),
+    // "7" => build_test7_workload(),
+    // "8" => build_test8_workload(),
+    // "9" => build_test9_workload(),
+    // "10" => build_test10_workload(),
     "11" => build_test11_workload(),
     _ => panic!("Test {} is not implemented", test_id),
   };
@@ -204,6 +263,13 @@ pub fn run_test_pso_main() {
     "1" => build_test1_data_center(),
     "2" => build_test2_data_center(),
     "3" => build_test3_data_center(),
+    "4" => build_test4_data_center(),
+    // "5" => build_test5_data_center(),
+    // "6" => build_test6_data_center(),
+    // "7" => build_test7_data_center(),
+    // "8" => build_test8_data_center(),
+    // "9" => build_test9_data_center(),
+    // "10" => build_test10_data_center(),
     "11" => build_test11_data_center(),
     _ => panic!("Test {} is not implemented", test_id),
   };
@@ -212,6 +278,8 @@ pub fn run_test_pso_main() {
   swarm.run_pso_algorithm();
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
   println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
+
+  println!("Saving objective history to objective_history.csv... ");
   // Save the cost history to local file
   utils::utilities::write_objective_history_to_csv(&swarm.get_particle_objective_history(), "./output_data/objective_history.csv");
 }

@@ -10,8 +10,8 @@ def plot(test_id, language, particle_histories, path):
     i += 1
 
   plt.title(f"{language.capitalize()} Test {test_id}: adPSO Objective History")
-  plt.xlabel("Iteration")
-  plt.ylabel("Objective (Throughput + (1 / Energy Consumption))")
+  plt.xlabel("Iteration Number")
+  plt.ylabel("Objective Value")
   plt.legend(bbox_to_anchor = (1.25, 0.5), loc='center right')
   plt.tight_layout()
 

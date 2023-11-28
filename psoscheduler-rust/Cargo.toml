@@ -26,8 +26,7 @@ ndarray-rand="0.14.0"
 ordered-float="4.1.1"
 
 [dev-dependencies]
-criterion="0.5.1"
-gnuplot="0.0.39"
+criterion = { version = "0.5.1", features = ["html_reports"] }
 
 [[bench]]
 name = "rust_pso_benchmark"
