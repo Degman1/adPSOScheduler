@@ -34,15 +34,16 @@ impl Particle {
 
     data_center.reset_virtual_machine_ready_time();
 
-    // TODO sort tasks once, not all 20 times
     for task in workload.get_sorted_tasks().iter() {
       let vm_id: usize;
-      if utilities::get_random_float(0., 1.) < 0.25 {
+      if utilities::get_random_float(0., 1.) < 0.25 { // TODO change to 0.25
         vm_id = utilities::get_random_integer(0, data_center.virtual_machines.len());
       } else {
         vm_id = data_center.get_min_eet_virtual_machine(task);
       }
       position[[task.id, vm_id]] = 1.;
+      // TODO comment out
+      task_vm_mapping.insert(task.id, vm_id);
       data_center.add_execution_time_to_virtual_machine(task, vm_id);
     }
 
@@ -104,13 +105,13 @@ impl Particle {
     let r2: f32 = utilities::get_random_float(0., 1.);
 
     self.velocity.mapv_inplace(|a| a * w);
-    let local_exploration: Array2<f32> = (&self.personal_best_position - &self.position)
-                                          .mapv(|a| a * Particle::C1 * r1);
-    let global_exploration: Array2<f32> = (global_best_position - &self.position)
-                                          .mapv(|a| a * Particle::C2 * r2);
+    let mut local_exploration: Array2<f32> = &self.personal_best_position - &self.position;
+    local_exploration.mapv_inplace(|a| a * Particle::C1 * r1);
+    let mut global_exploration: Array2<f32> = global_best_position - &self.position;
+    global_exploration.mapv_inplace(|a| a * Particle::C2 * r2);
     self.velocity += &(local_exploration + &global_exploration);
     self.velocity.mapv_inplace(|a| -> f32 {
-      if a.abs() > Particle::MAX_ABS_VELOCITY {
+      if a.abs() > Particle::MAX_ABS_VELOCITY || a < 0. {
         return utilities::get_random_float(0., Particle::MAX_ABS_VELOCITY);
       }
       return a;
@@ -125,7 +126,7 @@ impl Particle {
       let mut max_val: f32 = 0.;
       for (j, e) in row.indexed_iter() {
         self.position[[i, j]] = 0.;
-        if e > &max_val {
+        if *e > max_val {
           max_col = j;
           max_val = *e;
         }

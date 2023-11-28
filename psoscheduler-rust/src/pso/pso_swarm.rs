@@ -63,8 +63,8 @@ impl PSOSwarm {
   }
 
   fn run_iteration(&mut self, iteration: u32) {
-    self.w = ((PSOSwarm::W1 - PSOSwarm::W1) / self.p_s) + 
-             (((self.max_iterations - (iteration)) / self.max_iterations) as f32) * 
+    self.w = ((PSOSwarm::W1 - PSOSwarm::W2) / self.p_s) + 
+             (((self.max_iterations - (iteration)) as f32) / (self.max_iterations as f32)) * 
              ((PSOSwarm::W1 - (PSOSwarm::W1 - PSOSwarm::W2)) / self.p_s);
 
     let mut ss: f32 = 0.;

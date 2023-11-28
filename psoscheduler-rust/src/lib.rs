@@ -112,7 +112,7 @@ pub fn build_test4_data_center() -> simulation::data_center::DataCenter {
 
   let mut data_center = simulation::data_center::DataCenter::new();
 
-  for i in 0..n_vms {
+  for _ in 0..n_vms {
     let mips: u32 = utils::utilities::get_random_integer(vm_mips_low, vm_mips_high) as u32;
     let vm = simulation::virtual_machine::VirtualMachine::new(mips, 500.);
     data_center.add_virtual_machine(vm);
@@ -154,11 +154,11 @@ pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
 
   let mut data_center = simulation::data_center::DataCenter::new();
 
-  for i in 0..n_vms {
+  for _ in 0..n_vms {
     let mi = utils::utilities::get_random_integer(vm_mips_low, vm_mips_high) as u32;
     let asj = utils::utilities::get_random_float(active_state_joules_per_mi_low, active_state_joules_per_mi_high);
     let vm = simulation::virtual_machine::VirtualMachine::new(mi, asj);
-    data_center.add_virtual_machine(vm)
+    data_center.add_virtual_machine(vm);
   }
 
   simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
@@ -173,7 +173,7 @@ pub fn build_test11_workload() -> simulation::workload::Workload {
 
   let mut workload = simulation::workload::Workload::new();
 
-  for i in 0..n_tasks {
+  for _ in 0..n_tasks {
     let mi = utils::utilities::get_random_integer(task_mi_low, task_mi_high) as u32;
     let task = simulation::task::Task::new(mi);
     workload.add_task(task);
@@ -249,7 +249,7 @@ pub fn run_test_pso_main() {
     "2" => build_test2_workload(),
     "3" => build_test3_workload(),
     "4" => build_test4_workload(),
-    // "5" => build_test5_workload(),
+    "5" => build_test5_workload(),
     // "6" => build_test6_workload(),
     // "7" => build_test7_workload(),
     // "8" => build_test8_workload(),
@@ -264,7 +264,7 @@ pub fn run_test_pso_main() {
     "2" => build_test2_data_center(),
     "3" => build_test3_data_center(),
     "4" => build_test4_data_center(),
-    // "5" => build_test5_data_center(),
+    "5" => build_test5_data_center(),
     // "6" => build_test6_data_center(),
     // "7" => build_test7_data_center(),
     // "8" => build_test8_data_center(),
@@ -277,7 +277,7 @@ pub fn run_test_pso_main() {
   let mut swarm = pso::pso_swarm::PSOSwarm::new(workload, data_center);
   swarm.run_pso_algorithm();
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
-  println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
+  // println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
 
   println!("Saving objective history to objective_history.csv... ");
   // Save the cost history to local file
@@ -285,7 +285,7 @@ pub fn run_test_pso_main() {
 }
 
 pub fn ndarray_ops(arr1: &Array2<f32>, arr2: &Array2<f32>) {
-  let arr3 = (arr2 - arr1).mapv(|a| a * 5.);
+  let _arr3 = (arr2 - arr1).mapv(|a| a * 5.);
 }
 
 pub fn benchmark_ndarray() {
@@ -294,7 +294,7 @@ pub fn benchmark_ndarray() {
 
   let mut total: Duration = Duration::new(0, 0);
 
-  for i in 0..1000 {
+  for _ in 0..1000 {
     let start = Instant::now();
     ndarray_ops(&arr1, &arr2);
     total += start.elapsed();

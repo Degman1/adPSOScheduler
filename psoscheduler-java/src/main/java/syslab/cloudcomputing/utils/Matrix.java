@@ -125,7 +125,7 @@ public class Matrix {
   public Matrix enforceElementwiseBound(double maxAbsoluteValue) {
     for (int i = 0; i < this.getRowsCount(); i++) {
       for (int j = 0; j < this.getColumnCount(); j++) {
-        if (Math.abs(this.mtx[i][j]) > maxAbsoluteValue) {
+        if (Math.abs(this.mtx[i][j]) > maxAbsoluteValue || Math.abs(this.mtx[i][j]) < 0) {
           // System.out.println("************************ HIT BOUND, RANDOMIZING!");
           this.mtx[i][j] = Utilities.getRandomDouble(0, maxAbsoluteValue);
         }

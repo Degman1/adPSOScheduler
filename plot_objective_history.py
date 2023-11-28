@@ -1,5 +1,5 @@
 import argparse
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import numpy as np
 
 def plot(test_id, language, particle_histories, path):
