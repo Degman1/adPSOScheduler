@@ -19,7 +19,7 @@ if [[ $1 = "java" ]]; then
   /usr/bin/env $jdkPath -XX:+ShowCodeDetailsInExceptionMessages -cp ./psoscheduler-java/target/classes syslab.cloudcomputing.schedule.Scheduler $2 $3
 else
   echo "Rust PSO selected"
-  cargo run --manifest-path ./psoscheduler-rust/Cargo.toml $3
+  cargo run --manifest-path ./psoscheduler-rust/Cargo.toml --release $3
 fi
 
 # Generate a objective history plot based off the output data

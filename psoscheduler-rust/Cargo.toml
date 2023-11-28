@@ -13,6 +13,12 @@ edition = "2021"
 name = "psoscheduler"
 path = "src/lib.rs"
 
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+
 [dependencies]
 rand="0.8.5"
 ndarray="0.15.6"
@@ -20,8 +26,13 @@ ndarray-rand="0.14.0"
 ordered-float="4.1.1"
 
 [dev-dependencies]
-criterion="0.3"
+criterion="0.5.1"
+gnuplot="0.0.39"
 
 [[bench]]
 name = "rust_pso_benchmark"
+harness = false
+
+[[bench]]
+name = "ndarray_benchmark"
 harness = false

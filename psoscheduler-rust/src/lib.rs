@@ -1,4 +1,10 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::Ordering;
+use ndarray::Array;
+use ndarray::Array2;
+use ndarray_rand::RandomExt;
+use ndarray_rand::rand_distr::Uniform;
+use std::time::{Instant, Duration};
+use std::env;
 
 pub mod simulation {
   pub mod task;
@@ -179,4 +185,53 @@ pub fn basic_tests() {
   for t in wk.get_sorted_tasks().iter() {
     println!("{}", t);
   }
+}
+
+pub fn run_test_pso_main() {
+  let args: Vec<String> = env::args().collect();
+
+  let test_id = args[1].clone();
+
+  let workload = match test_id.as_str() {
+    "1" => build_test1_workload(),
+    "2" => build_test2_workload(),
+    "3" => build_test3_workload(),
+    "11" => build_test11_workload(),
+    _ => panic!("Test {} is not implemented", test_id),
+  };
+
+  let data_center = match test_id.as_str() {
+    "1" => build_test1_data_center(),
+    "2" => build_test2_data_center(),
+    "3" => build_test3_data_center(),
+    "11" => build_test11_data_center(),
+    _ => panic!("Test {} is not implemented", test_id),
+  };
+
+  let mut swarm = pso::pso_swarm::PSOSwarm::new(workload, data_center);
+  swarm.run_pso_algorithm();
+  println!("Global Best Objective: {:?}", swarm.global_best_objective);
+  println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
+  // Save the cost history to local file
+  utils::utilities::write_objective_history_to_csv(&swarm.get_particle_objective_history(), "./output_data/objective_history.csv");
+}
+
+pub fn ndarray_ops(arr1: &Array2<f32>, arr2: &Array2<f32>) {
+  let arr3 = (arr2 - arr1).mapv(|a| a * 5.);
+}
+
+pub fn benchmark_ndarray() {
+  let arr1 :Array2<f32> = Array::random((1000, 100), Uniform::new(0., 10.));
+  let arr2 :Array2<f32> = Array::random((1000, 100), Uniform::new(0., 10.));
+
+  let mut total: Duration = Duration::new(0, 0);
+
+  for i in 0..1000 {
+    let start = Instant::now();
+    ndarray_ops(&arr1, &arr2);
+    total += start.elapsed();
+  }
+  
+  let ave = total / 1000;
+  println!("{:?} average", ave);
 }

@@ -1,8 +1,33 @@
 package syslab.cloudcomputing.utils;
 
 import java.util.Arrays;
+import java.time.Duration;
+import java.time.Instant;
 
 public class Matrix {
+  public static void main(String[] args) {
+    Matrix m1 = new Matrix(1000, 100);
+    m1.randomVelocityInitialization(0.0, 10.0);
+    Matrix m2 = new Matrix(1000, 100);
+    m2.randomVelocityInitialization(0.0, 10.0);
+
+    long total = 0;
+
+    int n = 100000;
+
+    for (int i = 0; i < n; i++) {
+      long start = System.nanoTime();
+      Matrix m3 = m1.copy().add(m2).multiply(5.0);
+      long end = System.nanoTime();
+      total += end - start;
+    }
+
+    double aveNano = total / (float) n;
+    double aveMs = aveNano / 1000000.0;
+
+    System.out.println(aveMs + " average");
+  }
+
   private static BinaryOperation addition = (x, y) -> x + y;
   private static BinaryOperation subtraction = (x, y) -> x - y;
   private static BinaryOperation multilpication = (x, y) -> x * y;
