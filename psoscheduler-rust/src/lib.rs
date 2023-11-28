@@ -41,6 +41,23 @@ pub fn build_test1_workload() -> simulation::workload::Workload {
   workload
 }
 
+pub fn build_test2_data_center() -> simulation::data_center::DataCenter {
+  let mut data_center = simulation::data_center::DataCenter::new();
+
+  let vm1 = simulation::virtual_machine::VirtualMachine::new(50, 500.);
+  let vm2 = simulation::virtual_machine::VirtualMachine::new(100, 500.);
+  data_center.add_virtual_machine(vm1);
+  data_center.add_virtual_machine(vm2);
+
+  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
+
+  data_center
+}
+
+pub fn build_test2_workload() -> simulation::workload::Workload {
+  build_test1_workload()
+}
+
 pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
   let n_vms: usize = 100;
   let vm_mips_low: usize = 1000;

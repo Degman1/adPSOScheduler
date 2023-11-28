@@ -66,24 +66,26 @@ impl Particle {
   pub fn run_iteration(&mut self, workload: &Workload, data_center: &mut DataCenter, w: f32, global_best_position: &Array2<f32>) -> u8 {
     let mut start = Instant::now();
     self.update_velocity(w, global_best_position);
-    println!("Update Velocity: {:?}", start.elapsed());
+    //println!("Update Velocity: {:?}", start.elapsed());
     start = Instant::now();
     self.update_position();
-    println!("Update Position: {:?}", start.elapsed());
+    //println!("Update Position: {:?}", start.elapsed());
 
     start = Instant::now();
     self.update_data_center(workload, data_center);
-    println!("Update Data Center: {:?}", start.elapsed());
+    //println!("Update Data Center: {:?}", start.elapsed());
     start = Instant::now();
     let objective: f32 = data_center.compute_objective();
-    self.objective_history.push(objective);
-    println!("Compute Object + Push: {:?}", start.elapsed());
+    //println!("Compute Object + Push: {:?}", start.elapsed());
 
     if objective > self.personal_best_objective {
       self.personal_best_objective = objective;
       self.personal_best_position = self.position.clone();
+      self.objective_history.push(objective);
       return 1;
     }
+
+    self.objective_history.push(self.personal_best_objective);
 
     return 0;
   }
@@ -110,22 +112,22 @@ impl Particle {
     let mut start = Instant::now();
     let r1: f32 = utilities::get_random_float(0., 1.);
     let r2: f32 = utilities::get_random_float(0., 1.);
-    println!("\tRandomize r1, r2: {:?}", start.elapsed());
+    //println!("\tRandomize r1, r2: {:?}", start.elapsed());
 
     start = Instant::now();
     self.velocity.mapv_inplace(|a| a * w);
-    println!("\tScale Velocity: {:?}", start.elapsed());
+    //println!("\tScale Velocity: {:?}", start.elapsed());
     start = Instant::now();
     let local_exploration: Array2<f32> = (&self.personal_best_position - &self.position)
                                           .mapv(|a| a * Particle::C1 * r1);
-    println!("\tLocal Exploration: {:?}", start.elapsed());
+    //println!("\tLocal Exploration: {:?}", start.elapsed());
     start = Instant::now();
     let global_exploration: Array2<f32> = (global_best_position - &self.position)
                                           .mapv(|a| a * Particle::C2 * r2);
-    println!("\tGlobal Exploration: {:?}", start.elapsed());
+    //println!("\tGlobal Exploration: {:?}", start.elapsed());
     start = Instant::now();
     self.velocity += &(local_exploration + &global_exploration);
-    println!("\tAdd: {:?}", start.elapsed());
+    //println!("\tAdd: {:?}", start.elapsed());
     start = Instant::now();
     self.velocity.mapv_inplace(|a| -> f32 {
       if a.abs() > Particle::MAX_ABS_VELOCITY {
@@ -133,7 +135,7 @@ impl Particle {
       }
       return a;
     });
-    println!("\tEnforce Boundary: {:?}", start.elapsed());
+    //println!("\tEnforce Boundary: {:?}", start.elapsed());
   }
 
   fn update_position(&mut self) {

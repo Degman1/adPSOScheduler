@@ -23,8 +23,8 @@ impl PSOSwarm {
   const W2: f32 = 0.4;
 
   pub fn new(mut workload: Workload, mut data_center: DataCenter) -> PSOSwarm {
-    let max_iterations: u32 = 1;
-    let n_particles: u32 = 1;
+    let max_iterations: u32 = 200;
+    let n_particles: u32 = 20;
     let p_s: f32 = 1.;
     let w: f32 = 0.;
 
@@ -56,7 +56,6 @@ impl PSOSwarm {
 
   pub fn run_pso_algorithm(&mut self) {
     for iteration in 0..self.max_iterations {
-      println!("{}", iteration);
       self.run_iteration(iteration);
     }
 

@@ -76,13 +76,14 @@ public class Particle {
     this.updateDataCenter();
     double objective = this.dataCenter.computeObjective();
 
-    this.objectiveHistory.add(this.personalBestObjectiveValue);
-
     if (objective > this.personalBestObjectiveValue) {
       this.personalBestPosition = this.position.copy();
       this.personalBestObjectiveValue = objective;
+      this.objectiveHistory.add(objective);
       return 1;
     }
+
+    this.objectiveHistory.add(this.personalBestObjectiveValue);
 
     return 0;
   }
