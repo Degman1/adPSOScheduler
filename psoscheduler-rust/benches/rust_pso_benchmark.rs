@@ -4,7 +4,7 @@ use psoscheduler;
 
 pub fn criterion_benchmark(c: &mut Criterion) {
   // env::set_var("RUST_BACKTRACE", "full");
-  c.bench_function("Rust PSO Test 11", |b| b.iter(|| psoscheduler::run_pso_algorithm(black_box(psoscheduler::build_basic_workload()), black_box(psoscheduler::build_basic_data_center()))));
+  c.bench_function("Rust PSO Test 11 Benchmark", |b| b.iter(|| psoscheduler::run_pso_algorithm(black_box(psoscheduler::build_test11_workload()), black_box(psoscheduler::build_test11_data_center()))));
 }
 
 criterion_group!(benches, criterion_benchmark);

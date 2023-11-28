@@ -23,8 +23,8 @@
 hs_err_pid*
 replay_pid*
 
-output_data/
-Braun_et_al/
+output_data/*
+Braun_et_al/*
 .vscode/
 .DS_Store
-psoscheduler-rust/target
+psoscheduler-rust/target/*
