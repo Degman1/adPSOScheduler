@@ -79,8 +79,6 @@ impl Particle {
     self.objective_history.push(objective);
     println!("Compute Object + Push: {:?}", start.elapsed());
 
-
-
     if objective > self.personal_best_objective {
       self.personal_best_objective = objective;
       self.personal_best_position = self.position.clone();
@@ -130,7 +128,7 @@ impl Particle {
     println!("\tAdd: {:?}", start.elapsed());
     start = Instant::now();
     self.velocity.mapv_inplace(|a| -> f32 {
-      if a > Particle::MAX_ABS_VELOCITY {
+      if a.abs() > Particle::MAX_ABS_VELOCITY {
         return utilities::get_random_float(0., Particle::MAX_ABS_VELOCITY);
       }
       return a;

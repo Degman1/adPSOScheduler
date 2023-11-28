@@ -94,7 +94,7 @@ impl DataCenter {
 
   pub fn compute_objective(&self) -> f32 {
     let makespan = self.compute_makespan();
-    let throughput = makespan / (self.task_count as f32);
+    let throughput = (self.task_count as f32) / makespan;
     let kw = self._compute_energy_consumption_kw(makespan);
     let hw = kw * 10.0;  // hectowatts
     let average_watts_per_task = hw / (self.task_count as f32);

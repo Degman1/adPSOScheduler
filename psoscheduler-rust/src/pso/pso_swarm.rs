@@ -23,8 +23,8 @@ impl PSOSwarm {
   const W2: f32 = 0.4;
 
   pub fn new(mut workload: Workload, mut data_center: DataCenter) -> PSOSwarm {
-    let max_iterations: u32 = 200;
-    let n_particles: u32 = 20;
+    let max_iterations: u32 = 1;
+    let n_particles: u32 = 1;
     let p_s: f32 = 1.;
     let w: f32 = 0.;
 
