@@ -58,6 +58,35 @@ pub fn build_test2_workload() -> simulation::workload::Workload {
   build_test1_workload()
 }
 
+pub fn build_test3_data_center() -> simulation::data_center::DataCenter {
+  let n_vms: usize = 36;
+  let vm_mips_high: usize = 100;
+  let vm_mips_low: usize = 50;
+
+  let vm_high_id: usize = utils::utilities::get_random_integer(0, n_vms);
+
+  let mut data_center = simulation::data_center::DataCenter::new();
+  println!("Chose {}", vm_high_id);
+  for i in 0..n_vms {
+    if i == vm_high_id {
+      let vm = simulation::virtual_machine::VirtualMachine::new(vm_mips_high as u32, 500.);
+      data_center.add_virtual_machine(vm);
+    } else {
+      let vm = simulation::virtual_machine::VirtualMachine::new(vm_mips_low as u32, 500.);
+
+      data_center.add_virtual_machine(vm);
+    }
+  }
+
+  simulation::virtual_machine::VIRTUAL_MACHINE_ID_COUNTER.store(0, Ordering::Relaxed);
+
+  data_center
+}
+
+pub fn build_test3_workload() -> simulation::workload::Workload {
+  build_test1_workload()
+}
+
 pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
   let n_vms: usize = 100;
   let vm_mips_low: usize = 1000;
