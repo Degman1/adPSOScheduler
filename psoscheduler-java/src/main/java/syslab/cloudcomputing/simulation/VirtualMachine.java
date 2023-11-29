@@ -65,4 +65,8 @@ public class VirtualMachine {
 	public void setMillionsOfInstructionsPerSecond(int millionsOfInstructionsPerSecond) {
 		this.millionsOfInstructionsPerSecond = millionsOfInstructionsPerSecond;
 	}
+
+	public static void resetIdCounter() {
+    VirtualMachine.idCounter = 1;
+  }
 }

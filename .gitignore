@@ -28,3 +28,4 @@ Braun_et_al/*
 .vscode/
 .DS_Store
 psoscheduler-rust/target/*
+psoscheduler-java/target/*

@@ -3,15 +3,7 @@ package syslab.cloudcomputing.schedule;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-
 import syslab.cloudcomputing.utils.Utilities;
 
 import syslab.cloudcomputing.pso.PSOSwarm;
@@ -67,7 +59,7 @@ public class Scheduler {
 
     public static void runSingleTest(DataCenter dataCenter, Workload workload, Boolean recordObjectiveHistory) {
         PSOSwarm swarm = new PSOSwarm(dataCenter, workload);
-        HashMap<Task, VirtualMachine> mapping = swarm.runPSOAlgorithm();
+        swarm.runPSOAlgorithm();
 
         System.out.println("Global Best Objective: " + swarm.globalBestObjectiveValue);
         
@@ -90,8 +82,7 @@ public class Scheduler {
             System.out.println("Completed");
         }
     }
-
-    // TODO Pupose=benchmarking
+    
     public static void runRepeatedTest(DataCenter dataCenter, Workload workload, double handCalculatedBest) {
         int nRetries = 1000;
 

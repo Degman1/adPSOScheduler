@@ -30,20 +30,20 @@ impl Particle {
 
   pub fn new(workload: &mut Workload, data_center: &mut DataCenter) -> Particle {
     let mut position: Array2<f32> = Array::zeros((workload.tasks.len(), data_center.virtual_machines.len()));
-    let mut task_vm_mapping: HashMap<usize, usize> = HashMap::new();
+    let task_vm_mapping: HashMap<usize, usize> = HashMap::new();
 
     data_center.reset_virtual_machine_ready_time();
 
     for task in workload.get_sorted_tasks().iter() {
       let vm_id: usize;
-      if utilities::get_random_float(0., 1.) < 0.25 { // TODO change to 0.25
+      if utilities::get_random_float(0., 1.) < 0.25 {
         vm_id = utilities::get_random_integer(0, data_center.virtual_machines.len());
       } else {
         vm_id = data_center.get_min_eet_virtual_machine(task);
       }
       position[[task.id, vm_id]] = 1.;
-      // TODO comment out
-      task_vm_mapping.insert(task.id, vm_id);
+      
+      // task_vm_mapping.insert(task.id, vm_id);
       data_center.add_execution_time_to_virtual_machine(task, vm_id);
     }
 

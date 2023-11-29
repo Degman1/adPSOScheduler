@@ -60,5 +60,4 @@ public class Workload {
   public String toString() {
     return "{ Workload: " + tasks + " }";
   }
-
 }

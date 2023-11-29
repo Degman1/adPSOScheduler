@@ -42,5 +42,9 @@ public class Task {
 
 	public void setWorkloadId(int id) {
 		this.workloadId = id;
-	}	
+	}
+
+	public static void resetIdCounter() {
+    Task.idCounter = 1;
+  }
 }

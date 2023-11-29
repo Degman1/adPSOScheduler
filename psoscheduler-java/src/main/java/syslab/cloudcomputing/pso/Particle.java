@@ -197,7 +197,7 @@ public class Particle {
     // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
     // Because this version of PSO is discrete in nature
     // System.out.println("\nParticle " + this.id + " Position (before): " + this.position);
-    this.position.zeroOut();  // TODO make this O(# tasks) instead of O(# tasks * # vms). Would this actually make a noticable difference? Because velocity is  O(# tasks * # vms)
+    this.position.zeroOut();
 
     for (int i = 0; i < this.velocity.getRowsCount(); i++) {
       int j = this.velocity.getIndexOfMaximumColumnForRow(i);
@@ -247,6 +247,10 @@ public class Particle {
 
   public ArrayList<Double> getObjectiveHistory() {
     return this.objectiveHistory;
+  }
+
+  public static void resetIdCounter() {
+    Particle.idCounter = 0;
   }
 
   @Override
