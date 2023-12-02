@@ -48,7 +48,7 @@ impl DataCenter {
   pub fn add_execution_time_to_virtual_machine(&mut self, task: &Task, vm_id: usize) {
     let vm = &self.virtual_machines[vm_id];
     let current_execution_time: f32;
-    match self.virtual_machine_ready_time.get(&task.id) {
+    match self.virtual_machine_ready_time.get(&vm_id) {
       Some(time) => current_execution_time = *time,
       None => current_execution_time = 0.0
     }
@@ -101,9 +101,10 @@ impl DataCenter {
   pub fn compute_objective(&self) -> f32 {
     let makespan = self.compute_makespan();
     let throughput = (self.task_count as f32) / makespan;
-    let kwh = self._compute_energy_consumption_kwh(makespan);
+    let kwh = self._compute_energy_consumption_kwh(makespan) * 1000.;
+    let kwh_per_task = kwh / self.task_count as f32;
     // Scale the energy consumption to an appropriate weight in the objective function
-    return throughput + (5.0 / kwh);
+    return throughput + (0.1 / kwh_per_task);
   }
 
   pub fn get_min_eet_virtual_machine(&self, task: &Task) -> usize {

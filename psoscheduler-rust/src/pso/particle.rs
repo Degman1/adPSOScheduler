@@ -8,7 +8,6 @@ use std::collections::HashMap;
 use crate::utils::utilities;
 use crate::simulation::data_center::DataCenter;
 use crate::simulation::workload::Workload;
-use crate::simulation::task::Task;
 
 static PARTICLE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
@@ -19,6 +18,10 @@ pub struct Particle {
   pub task_vm_mapping: HashMap<usize, usize>,
   pub personal_best_position: Array2<f32>,
   pub personal_best_objective: f32,
+
+  pub personal_best_th: f32,
+  pub personal_best_tec: f32,
+
   pub objective_history: Vec<f32>,
 }
 
@@ -59,19 +62,26 @@ impl Particle {
       task_vm_mapping: task_vm_mapping,
       personal_best_position: personal_best_position,
       personal_best_objective: personal_best_objective,
+      personal_best_th: 0.0,
+      personal_best_tec: 0.0,
       objective_history: objective_history,
     }
   }
 
   pub fn run_iteration(&mut self, workload: &Workload, data_center: &mut DataCenter, w: f32, global_best_position: &Array2<f32>) -> u8 {
     self.update_velocity(w, global_best_position);
-    self.update_position();
+    self.update_position_and_data_center(workload, data_center);
 
-    self.update_data_center(workload, data_center);
+    // self.update_data_center(workload, data_center);
     let objective: f32 = data_center.compute_objective();
 
     if objective > self.personal_best_objective {
       self.personal_best_objective = objective;
+
+      self.personal_best_tec = data_center.compute_energy_consumption_kwh();
+      println!("{}", self.personal_best_tec);
+      self.personal_best_th = data_center.compute_throughput();
+
       self.personal_best_position = self.position.clone();
       self.objective_history.push(objective);
       return 1;
@@ -82,23 +92,23 @@ impl Particle {
     return 0;
   }
 
-  fn update_data_center(&self, workload: &Workload, data_center: &mut DataCenter) {
-    data_center.reset_virtual_machine_ready_time();
+  // fn update_data_center(&self, workload: &Workload, data_center: &mut DataCenter) {
+  //   data_center.reset_virtual_machine_ready_time();
 
-    let mut i: usize = 0;
-    for row in self.position.outer_iter() {
-      let task: &Task = &workload.tasks[i];
-      let mut vm_id: usize = 0;
-      for (j, e) in row.indexed_iter() {
-        if *e > 0. {
-          vm_id = j;
-          break;
-        }
-      }
-      data_center.add_execution_time_to_virtual_machine(task, vm_id);
-      i += 1;
-    }
-  }
+  //   let mut i: usize = 0;
+  //   for row in self.position.rows() {
+  //     let task: &Task = &workload.tasks[i];
+  //     let mut vm_id: usize = 0;
+  //     for (j, e) in row.indexed_iter() {
+  //       if *e > 0.9 {
+  //         vm_id = j;
+  //         break;
+  //       }
+  //     }
+  //     data_center.add_execution_time_to_virtual_machine(task, vm_id);
+  //     i += 1;
+  //   }
+  // }
 
   fn update_velocity(&mut self, w: f32, global_best_position: &Array2<f32>) {
     let r1: f32 = utilities::get_random_float(0., 1.);
@@ -118,12 +128,13 @@ impl Particle {
     });
   }
 
-  fn update_position(&mut self) {
-    // self.position.mapv_inplace(|_a| 0.);
+  fn update_position_and_data_center(&mut self, workload: &Workload, data_center: &mut DataCenter) {
+    data_center.reset_virtual_machine_ready_time();
+
     let mut i: usize = 0;
     for row in self.velocity.rows() {
       let mut max_col: usize = 0;
-      let mut max_val: f32 = 0.;
+      let mut max_val: f32 = -Particle::MAX_ABS_VELOCITY - 1.;
       for (j, e) in row.indexed_iter() {
         self.position[[i, j]] = 0.;
         if *e > max_val {
@@ -132,6 +143,7 @@ impl Particle {
         }
       }
       self.position[[i, max_col]] = 1.;
+      data_center.add_execution_time_to_virtual_machine(&workload.tasks.get(i).unwrap(), max_col);
       i += 1
     }
   }

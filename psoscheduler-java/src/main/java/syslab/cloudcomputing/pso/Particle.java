@@ -71,9 +71,9 @@ public class Particle {
   public int runIteration(double w) {
 
     this.updateVelocity(w);
-    this.updatePosition();
+    this.updatePositionAndDataCenter();
 
-    this.updateDataCenter();
+    // this.updateDataCenter();
     double objective = this.dataCenter.computeObjective();
 
     if (objective > this.personalBestObjectiveValue) {
@@ -94,9 +94,9 @@ public class Particle {
     this.velocity = new Matrix(this.workload.getTaskCount(), this.dataCenter.getVirtualMachineCount());
     this.velocity.randomVelocityInitialization(0, 1);
 
-    this.updatePosition();
+    this.updatePositionAndDataCenter();
 
-    updateDataCenter();
+    // updateDataCenter();
 
     // Must compute the local best after building the task to vm mapping in the line above for accurate
     // objective function computation
@@ -193,15 +193,17 @@ public class Particle {
     // System.out.println("Particle " + this.id + " Velocity (after): " + this.velocity);
   }
 
-  private void updatePosition() {
+  private void updatePositionAndDataCenter() {
     // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
     // Because this version of PSO is discrete in nature
     // System.out.println("\nParticle " + this.id + " Position (before): " + this.position);
     this.position.zeroOut();
+    this.dataCenter.resetVirtualMachineReadyTimes();
 
     for (int i = 0; i < this.velocity.getRowsCount(); i++) {
       int j = this.velocity.getIndexOfMaximumColumnForRow(i);
       this.position.setComponent(i, j, 1);
+      this.dataCenter.addExecutionTimeToVirtualMachine(this.workload.getTaskById(i), this.dataCenter.getVirtualMachineById(j));
     }
     // System.out.println("Particle " + this.id + " Position (after): " + this.position);
   }

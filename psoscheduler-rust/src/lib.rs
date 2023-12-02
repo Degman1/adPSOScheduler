@@ -6,6 +6,8 @@ use ndarray_rand::rand_distr::Uniform;
 use std::time::{Instant, Duration};
 use std::env;
 
+use crate::simulation::task::Task;
+
 pub mod simulation {
   pub mod task;
   pub mod workload;
@@ -280,17 +282,36 @@ pub fn run_test_pso_main() {
   swarm.find_global_best();
 
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
+  println!("Global Best Throughput: {:?}", swarm.global_best_th);
+  println!("Global Best TEC: {:?}", swarm.global_best_tec);
 
   swarm.data_center.reset_virtual_machine_ready_time();
-  for (task_id, vm_id) in swarm.global_best_task_vm_mapping.iter() {
-    let task: &simulation::task::Task = swarm.workload.tasks.get(*task_id).unwrap();
-    swarm.data_center.add_execution_time_to_virtual_machine(task, *vm_id);
+  let mut i: usize = 0;
+  for row in swarm.global_best_position.rows() {
+    let task: &Task = &swarm.workload.tasks[i];
+    let mut vm_id: usize = 0;
+    for (j, e) in row.indexed_iter() {
+      if *e > 0.9 {
+        vm_id = j;
+        break;
+      }
+    }
+    swarm.data_center.add_execution_time_to_virtual_machine(task, vm_id);
+    // print!("{}=>{} ", i, vm_id);
+    i += 1;
   }
+  // println!("");
+  // swarm.update_task_vm_mapping();
+  // for (task_id, vm_id) in swarm.global_best_task_vm_mapping.iter() {
+  //   print!("{}=>{} ", task_id, vm_id);
+  //   let task: &simulation::task::Task = swarm.workload.tasks.get(*task_id).unwrap();
+  //   swarm.data_center.add_execution_time_to_virtual_machine(task, *vm_id);
+  // }
 
   println!("Global Best Objective (double check): {:?}", swarm.data_center.compute_objective());
-  println!("Global Best Makespan: {:?} sec", swarm.data_center.compute_makespan());
-  println!("Global Best Throughput: {:?} tasks/sec", swarm.data_center.compute_throughput());
-  println!("Global Best Energy Consumption: {:?} kWh", swarm.data_center.compute_energy_consumption_kwh());
+  // println!("Global Best Makespan (double check): {:?} sec", swarm.data_center.compute_makespan());
+  println!("Global Best Throughput (double check): {:?} tasks/sec", swarm.data_center.compute_throughput());
+  println!("Global Best Energy Consumption (double check): {:?} kWh", swarm.data_center.compute_energy_consumption_kwh());
   // println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
 
   println!("Saving objective history to objective_history.csv... ");

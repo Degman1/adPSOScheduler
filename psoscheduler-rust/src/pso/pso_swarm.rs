@@ -11,6 +11,10 @@ pub struct PSOSwarm {
   pub p_s: f32,
   pub w: f32,
   pub global_best_objective: f32,
+
+  pub global_best_th: f32,
+  pub global_best_tec: f32,
+
   pub global_best_position: Array2<f32>,
   pub global_best_task_vm_mapping: HashMap<usize, usize>,
   pub particles: Vec<Particle>,
@@ -43,6 +47,8 @@ impl PSOSwarm {
       w: w,
       global_best_objective: 0.,
       global_best_position: global_best_position,
+      global_best_th: 0.0,
+      global_best_tec: 0.0,
       global_best_task_vm_mapping: global_best_task_vm_mapping,
       particles: particles,
       workload: workload,
@@ -64,7 +70,7 @@ impl PSOSwarm {
 
   fn run_iteration(&mut self, iteration: u32) {
     self.w = ((PSOSwarm::W1 - PSOSwarm::W2) / self.p_s) + 
-             (((self.max_iterations - (iteration)) as f32) / (self.max_iterations as f32)) * 
+             (((self.max_iterations - iteration) as f32) / (self.max_iterations as f32)) * 
              ((PSOSwarm::W1 - (PSOSwarm::W1 - PSOSwarm::W2)) / self.p_s);
 
     let mut ss: f32 = 0.;
@@ -86,6 +92,8 @@ impl PSOSwarm {
     for particle in self.particles.iter() {
       if particle.personal_best_objective > self.global_best_objective {
         self.global_best_objective = particle.personal_best_objective;
+        self.global_best_th = particle.personal_best_th;
+        self.global_best_tec = particle.personal_best_tec;
         self.global_best_position = particle.personal_best_position.clone();
       }
     }
