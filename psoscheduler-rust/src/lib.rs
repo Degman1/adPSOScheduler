@@ -149,14 +149,14 @@ pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
   let n_vms: usize = 100;
   let vm_mips_low: usize = 1000;
   let vm_mips_high: usize = 5000;
-  let active_state_joules_per_mi_low: f32 = 200.;
-  let active_state_joules_per_mi_high: f32 = 1000.;
+  let watts_low: f32 = 200.;
+  let watts_high: f32 = 1000.;
 
   let mut data_center = simulation::data_center::DataCenter::new();
 
   for _ in 0..n_vms {
     let mi = utils::utilities::get_random_integer(vm_mips_low, vm_mips_high) as u32;
-    let asj = utils::utilities::get_random_float(active_state_joules_per_mi_low, active_state_joules_per_mi_high);
+    let asj = utils::utilities::get_random_float(watts_low, watts_high);
     let vm = simulation::virtual_machine::VirtualMachine::new(mi, asj);
     data_center.add_virtual_machine(vm);
   }
@@ -276,7 +276,21 @@ pub fn run_test_pso_main() {
 
   let mut swarm = pso::pso_swarm::PSOSwarm::new(workload, data_center);
   swarm.run_pso_algorithm();
+
+  swarm.find_global_best();
+
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
+
+  swarm.data_center.reset_virtual_machine_ready_time();
+  for (task_id, vm_id) in swarm.global_best_task_vm_mapping.iter() {
+    let task: &simulation::task::Task = swarm.workload.tasks.get(*task_id).unwrap();
+    swarm.data_center.add_execution_time_to_virtual_machine(task, *vm_id);
+  }
+
+  println!("Global Best Objective (double check): {:?}", swarm.data_center.compute_objective());
+  println!("Global Best Makespan: {:?} sec", swarm.data_center.compute_makespan());
+  println!("Global Best Throughput: {:?} tasks/sec", swarm.data_center.compute_throughput());
+  println!("Global Best Energy Consumption: {:?} kWh", swarm.data_center.compute_energy_consumption_kwh());
   // println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
 
   println!("Saving objective history to objective_history.csv... ");

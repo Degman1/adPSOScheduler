@@ -14,14 +14,14 @@ public class VirtualMachine {
 	public VirtualMachine(int millionsOfInstructionsPerSecond) {
 		this.id = VirtualMachine.idCounter++;
 		this.millionsOfInstructionsPerSecond = millionsOfInstructionsPerSecond;
-		this.activeStateJoulesPerMillionInstructions = 500;
+		this.activeStateJoulesPerMillionInstructions = 5;
 		this.dataCenterId = 0;
 	}
 
-	public VirtualMachine(int millionsOfInstructionsPerSecond, double activeStateJoulesPerMillionInstructions) {
+	public VirtualMachine(int millionsOfInstructionsPerSecond, double watts) {
 		this.id = VirtualMachine.idCounter++;
 		this.millionsOfInstructionsPerSecond = millionsOfInstructionsPerSecond;
-		this.activeStateJoulesPerMillionInstructions = activeStateJoulesPerMillionInstructions;
+		this.activeStateJoulesPerMillionInstructions = watts / (double) millionsOfInstructionsPerSecond;
 		this.dataCenterId = 0;
 	}
 

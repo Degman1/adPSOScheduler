@@ -48,11 +48,6 @@ public class Scheduler {
             System.err.println("Invalid argument: " + args[0]);
             return;
         }
-        
-        // System.out.println(dataCenter);
-        // System.out.println(workload);
-
-        // Scheduler.runRepeatedTest(dataCenter, workload, 20.0);
 
         Scheduler.runSingleTest(dataCenter, workload, true);
     }
@@ -70,7 +65,7 @@ public class Scheduler {
 
         System.out.println("Global Best Makespan: " + dataCenter.computeMakespan() + " sec");
         System.out.println("Global Best Throughput: " + dataCenter.computeThroughput() + " tasks/sec");
-        System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumptionKW() + " KW");
+        System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumptionkWh() + " kWh");
         // System.out.println("Global Best Mapping: " + mapping);
         // System.out.println(dataCenter);
         System.out.print("Saving objective history to objective_history.csv... ");
@@ -304,15 +299,15 @@ public class Scheduler {
         int vmMipsHigh = 5000;
         int vmMipsLow = 1000;
 
-        int activeStateJoulesPerMillionInstructionsLow = 200;   // TODO Is this correct?
-        int activeStateJoulesPerMillionInstructionsHigh = 1000;
+        int wattsLow = 200;
+        int wattsHigh = 1000;
 
         ArrayList<VirtualMachine> vms = new ArrayList<VirtualMachine>();
 
         for (int i = 0; i < nVms; i++) {
             vms.add(new VirtualMachine(
                 Utilities.getRandomInteger(vmMipsLow, vmMipsHigh),
-                Utilities.getRandomInteger(activeStateJoulesPerMillionInstructionsLow, activeStateJoulesPerMillionInstructionsHigh)
+                Utilities.getRandomInteger(wattsLow, wattsHigh)
             ));
         }
 

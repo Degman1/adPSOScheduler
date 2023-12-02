@@ -82,7 +82,7 @@ impl PSOSwarm {
     }
   }
 
-  fn find_global_best(&mut self) {
+  pub fn find_global_best(&mut self) {
     for particle in self.particles.iter() {
       if particle.personal_best_objective > self.global_best_objective {
         self.global_best_objective = particle.personal_best_objective;

@@ -57,9 +57,9 @@ impl DataCenter {
     self.virtual_machine_ready_time.insert(vm.id, new_execution_time);
     self.task_count += 1;
     self.total_millions_of_instructions += task.millions_of_instructions;
-  } 
+  }
 
-  fn compute_makespan(&self) -> f32 {
+  pub fn compute_makespan(&self) -> f32 {
     match self.virtual_machine_ready_time
       .iter()
       .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
@@ -69,38 +69,41 @@ impl DataCenter {
       }
   }
 
-  fn _compute_energy_consumption_kw(&self, makespan: f32) -> f32 {
+  pub fn compute_throughput(&self) -> f32 {
+    (self.task_count as f32) / self.compute_makespan()
+  }
+
+  pub fn _compute_energy_consumption_kwh(&self, makespan: f32) -> f32 {
     let mut energy_consumption: f32 = 0.0;
 
-    for (vm_id, millions_of_instructions) in self.virtual_machine_ready_time.iter() {
+    for (vm_id, vm_expected_execution_time) in self.virtual_machine_ready_time.iter() {
       let vm = &self.virtual_machines[*vm_id];
-      let mut machine_energy_consumption = millions_of_instructions * vm.active_state_joules_per_million_instructions;
-      machine_energy_consumption += (makespan - millions_of_instructions) * vm.get_idle_state_joules_per_million_instructions();
+      let mut machine_energy_consumption = vm_expected_execution_time * vm.active_state_joules_per_million_instructions;
+      machine_energy_consumption += (makespan - vm_expected_execution_time) * vm.get_idle_state_joules_per_million_instructions();
       machine_energy_consumption *= vm.millions_of_instructions_per_second as f32;
       energy_consumption += machine_energy_consumption;
     }
 
-    energy_consumption /= self.total_millions_of_instructions as f32;
+    // Now we have joules, so divide it by the total number of seconds to get Watts=J/s
+    energy_consumption /= makespan as f32;
 
-    energy_consumption /= 1000.0;
+    // Now, convert to kWh
+    energy_consumption *= 1. / 3600000.;
 
     return energy_consumption;
   }
 
-  #[allow(dead_code)]
-  fn compute_energy_consumption_kw(&self) -> f32 {
+  pub fn compute_energy_consumption_kwh(&self) -> f32 {
     let makespan = self.compute_makespan();
-    self._compute_energy_consumption_kw(makespan)
+    self._compute_energy_consumption_kwh(makespan)
   }
 
   pub fn compute_objective(&self) -> f32 {
     let makespan = self.compute_makespan();
     let throughput = (self.task_count as f32) / makespan;
-    let kw = self._compute_energy_consumption_kw(makespan);
-    let hw = kw * 10.0;  // hectowatts
-    let average_watts_per_task = hw / (self.task_count as f32);
+    let kwh = self._compute_energy_consumption_kwh(makespan);
     // Scale the energy consumption to an appropriate weight in the objective function
-    return throughput + (2.0 / average_watts_per_task);
+    return throughput + (5.0 / kwh);
   }
 
   pub fn get_min_eet_virtual_machine(&self, task: &Task) -> usize {

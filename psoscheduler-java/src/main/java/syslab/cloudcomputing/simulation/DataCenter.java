@@ -64,38 +64,32 @@ public abstract class DataCenter {
   public double computeObjective() {
 		double makespan = this.computeMakespan();
     double throughput = (this.taskCount / makespan);
-    double KW = this._computeEnergyConsumptionKW(makespan);
-    double hW = KW * 10;  // hectowatts
-    double averageWattsPerTask = hW / this.taskCount;
-    // Scale the energy consumption to an appropriate weight in the objective function
-    return throughput + (2.0 / averageWattsPerTask);
+    double kWh = this._computeEnergyConsumptionkWh(makespan);
+    return throughput + (5.0 / kWh);
 	}
 
   // Private version that doesn't recompute the makespan to prioritize efficiency
-  private double _computeEnergyConsumptionKW(double makespan) {
+  private double _computeEnergyConsumptionkWh(double makespan) {
     double energyConsumption = 0;
 
     for (Map.Entry<VirtualMachine, Double> entry : this.virtualMachineReadyTime.entrySet()) {
       VirtualMachine vm = entry.getKey();
-      double millionsOfInstructions = entry.getValue();
-      double machineEnergyConsumption = millionsOfInstructions * vm.getActiveStateJoulesPerMillionInstructions();
-      machineEnergyConsumption += (makespan - millionsOfInstructions) * vm.getIdleStateJoulesPerMillionInstructions();
+      double vmExpectedExecutionTime = entry.getValue();
+      double machineEnergyConsumption = vmExpectedExecutionTime * vm.getActiveStateJoulesPerMillionInstructions();
+      machineEnergyConsumption += (makespan - vmExpectedExecutionTime) * vm.getIdleStateJoulesPerMillionInstructions();
       machineEnergyConsumption *= vm.getMillionsOfInstructionsPerSecond();
       energyConsumption += machineEnergyConsumption;
     }
 
-    // Convert from Joules * MIPS to Joules / sec (Watts)
-    energyConsumption /= this.totalMillionsOfInstructions;
-
-    // Convert from Watts (W) to KiloWatts (KW)
-    energyConsumption /= 1000.0;
+    // Convert to kWh
+    energyConsumption *= 1.0 / 3600000.0;
 
     return energyConsumption;
   }
 
-  public double computeEnergyConsumptionKW() {
+  public double computeEnergyConsumptionkWh() {
     double makespan = this.computeMakespan();
-    return this._computeEnergyConsumptionKW(makespan);
+    return this._computeEnergyConsumptionkWh(makespan);
   }
 
   public double computeMakespan() {
