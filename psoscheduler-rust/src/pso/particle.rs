@@ -19,6 +19,7 @@ pub struct Particle {
   pub task_vm_mapping: HashMap<usize, usize>,
   pub personal_best_position: Array2<f32>,
   pub personal_best_objective: f32,
+  pub personal_best_throughput: f32,
   pub objective_history: Vec<f32>,
 }
 
@@ -50,6 +51,7 @@ impl Particle {
     let velocity:Array2<f32>  = Array::random((workload.tasks.len(), data_center.virtual_machines.len()), Uniform::new(0., 1.));
     let personal_best_position: Array2<f32> = position.clone();
     let personal_best_objective: f32 = data_center.compute_objective();
+    let personal_best_throughput: f32 = data_center.compute_throughput();
     let objective_history: Vec<f32> = Vec::new();
 
     Particle {
@@ -59,6 +61,7 @@ impl Particle {
       task_vm_mapping: task_vm_mapping,
       personal_best_position: personal_best_position,
       personal_best_objective: personal_best_objective,
+      personal_best_throughput: personal_best_throughput,
       objective_history: objective_history,
     }
   }
@@ -72,6 +75,7 @@ impl Particle {
 
     if objective > self.personal_best_objective {
       self.personal_best_objective = objective;
+      self.personal_best_throughput = data_center.compute_throughput();
       self.personal_best_position = self.position.clone();
       self.objective_history.push(objective);
       return 1;

@@ -11,6 +11,7 @@ pub struct PSOSwarm {
   pub p_s: f32,
   pub w: f32,
   pub global_best_objective: f32,
+  pub global_best_throughput: f32,
   pub global_best_position: Array2<f32>,
   pub global_best_task_vm_mapping: HashMap<usize, usize>,
   pub particles: Vec<Particle>,
@@ -35,14 +36,17 @@ impl PSOSwarm {
 
     let global_best_task_vm_mapping: HashMap<usize, usize> = HashMap::new();
     let global_best_position = particles.get(0).unwrap().position.clone();
+    let global_best_objective = particles.get(0).unwrap().personal_best_objective;
+    let global_best_throughput = particles.get(0).unwrap().personal_best_throughput;
 
     let mut swarm = PSOSwarm {
       max_iterations: max_iterations,
       n_particles: n_particles,
       p_s: p_s,
       w: w,
-      global_best_objective: 0.,
+      global_best_objective: global_best_objective,
       global_best_position: global_best_position,
+      global_best_throughput: global_best_throughput,
       global_best_task_vm_mapping: global_best_task_vm_mapping,
       particles: particles,
       workload: workload,
@@ -85,6 +89,9 @@ impl PSOSwarm {
   pub fn find_global_best(&mut self) {
     for particle in self.particles.iter() {
       if particle.personal_best_objective > self.global_best_objective {
+        println!("{}", particle.personal_best_position);
+        println!("{}", particle.personal_best_objective);
+        self.global_best_throughput = particle.personal_best_throughput;
         self.global_best_objective = particle.personal_best_objective;
         self.global_best_position = particle.personal_best_position.clone();
       }

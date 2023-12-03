@@ -302,13 +302,16 @@ pub fn run_test_pso_main() {
   swarm.run_pso_algorithm();
 
   swarm.data_center.reset_virtual_machine_ready_time();
-
+  
   for (task_id, vm_id) in swarm.global_best_task_vm_mapping.iter() {
     let task: &simulation::task::Task = swarm.workload.tasks.get(*task_id).unwrap();
     swarm.data_center.add_execution_time_to_virtual_machine(task, *vm_id);
   }
 
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
+  println!("Global Best Throughput: {:?}", swarm.global_best_throughput);
+  println!("Global best pos (double check) \n{}", swarm.global_best_position);
+  println!("Global best vmrt \n{:?}", swarm.data_center.virtual_machine_ready_time);
   println!("Global Best Objective (double check): {:?}", swarm.data_center.compute_objective());
   println!("Global Best Makespan (double check): {:?} sec", swarm.data_center.compute_makespan());
   println!("Global Best Throughput (double check): {:?} tasks/sec", swarm.data_center.compute_throughput());
