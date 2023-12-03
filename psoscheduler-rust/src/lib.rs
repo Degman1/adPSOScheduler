@@ -147,6 +147,28 @@ pub fn build_test5_workload() -> simulation::workload::Workload {
   workload
 }
 
+pub fn build_test6_data_center() -> simulation::data_center::DataCenter {
+  build_test4_data_center()
+}
+
+pub fn build_test6_workload() -> simulation::workload::Workload {
+  reset_workload_id_counter();
+
+  let n_tasks: usize = 5;
+  let task_mi_low: usize = 5;
+  let task_mi_high: usize = 20;
+
+  let mut workload = simulation::workload::Workload::new();
+
+  for _ in 0..n_tasks {
+    let mi = utils::utilities::get_random_integer(task_mi_low, task_mi_high) as u32;
+    let task = simulation::task::Task::new(mi);
+    workload.add_task(task);
+  }
+
+  workload
+}
+
 pub fn build_test11_data_center() -> simulation::data_center::DataCenter {
   let n_vms: usize = 100;
   let vm_mips_low: usize = 1000;
@@ -252,7 +274,7 @@ pub fn run_test_pso_main() {
     "3" => build_test3_workload(),
     "4" => build_test4_workload(),
     "5" => build_test5_workload(),
-    // "6" => build_test6_workload(),
+    "6" => build_test6_workload(),
     // "7" => build_test7_workload(),
     // "8" => build_test8_workload(),
     // "9" => build_test9_workload(),
@@ -267,7 +289,7 @@ pub fn run_test_pso_main() {
     "3" => build_test3_data_center(),
     "4" => build_test4_data_center(),
     "5" => build_test5_data_center(),
-    // "6" => build_test6_data_center(),
+    "6" => build_test6_data_center(),
     // "7" => build_test7_data_center(),
     // "8" => build_test8_data_center(),
     // "9" => build_test9_data_center(),
@@ -279,37 +301,16 @@ pub fn run_test_pso_main() {
   let mut swarm = pso::pso_swarm::PSOSwarm::new(workload, data_center);
   swarm.run_pso_algorithm();
 
-  swarm.find_global_best();
+  swarm.data_center.reset_virtual_machine_ready_time();
+
+  for (task_id, vm_id) in swarm.global_best_task_vm_mapping.iter() {
+    let task: &simulation::task::Task = swarm.workload.tasks.get(*task_id).unwrap();
+    swarm.data_center.add_execution_time_to_virtual_machine(task, *vm_id);
+  }
 
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
-  println!("Global Best Throughput: {:?}", swarm.global_best_th);
-  println!("Global Best TEC: {:?}", swarm.global_best_tec);
-
-  swarm.data_center.reset_virtual_machine_ready_time();
-  let mut i: usize = 0;
-  for row in swarm.global_best_position.rows() {
-    let task: &Task = &swarm.workload.tasks[i];
-    let mut vm_id: usize = 0;
-    for (j, e) in row.indexed_iter() {
-      if *e > 0.9 {
-        vm_id = j;
-        break;
-      }
-    }
-    swarm.data_center.add_execution_time_to_virtual_machine(task, vm_id);
-    // print!("{}=>{} ", i, vm_id);
-    i += 1;
-  }
-  // println!("");
-  // swarm.update_task_vm_mapping();
-  // for (task_id, vm_id) in swarm.global_best_task_vm_mapping.iter() {
-  //   print!("{}=>{} ", task_id, vm_id);
-  //   let task: &simulation::task::Task = swarm.workload.tasks.get(*task_id).unwrap();
-  //   swarm.data_center.add_execution_time_to_virtual_machine(task, *vm_id);
-  // }
-
   println!("Global Best Objective (double check): {:?}", swarm.data_center.compute_objective());
-  // println!("Global Best Makespan (double check): {:?} sec", swarm.data_center.compute_makespan());
+  println!("Global Best Makespan (double check): {:?} sec", swarm.data_center.compute_makespan());
   println!("Global Best Throughput (double check): {:?} tasks/sec", swarm.data_center.compute_throughput());
   println!("Global Best Energy Consumption (double check): {:?} kWh", swarm.data_center.compute_energy_consumption_kwh());
   // println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);

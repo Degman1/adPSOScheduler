@@ -64,8 +64,8 @@ public abstract class DataCenter {
   public double computeObjective() {
 		double makespan = this.computeMakespan();
     double throughput = (this.taskCount / makespan);
-    double kWh = this._computeEnergyConsumptionkWh(makespan);
-    return throughput + (5.0 / kWh);
+    double Wh = this._computeEnergyConsumptionkWh(makespan) * 1000.0;
+    return throughput + (0.1 / Wh);
 	}
 
   // Private version that doesn't recompute the makespan to prioritize efficiency
