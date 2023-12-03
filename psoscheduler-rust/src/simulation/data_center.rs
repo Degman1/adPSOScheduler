@@ -42,6 +42,7 @@ impl DataCenter {
   }
 
   fn get_task_execution_time(&self, task: &Task, vm: &VirtualMachine) -> f32 {
+    // println!("{} / {} = {}", task.millions_of_instructions as f32, vm.millions_of_instructions_per_second as f32, (task.millions_of_instructions as f32) / (vm.millions_of_instructions_per_second as f32));
     (task.millions_of_instructions as f32) / (vm.millions_of_instructions_per_second as f32)
   }
 
@@ -54,6 +55,7 @@ impl DataCenter {
     }
 
     let new_execution_time: f32 = current_execution_time + self.get_task_execution_time(&task, &vm);
+    // println!("setting to {} sec", new_execution_time);
     self.virtual_machine_ready_time.insert(vm.id, new_execution_time);
     self.task_count += 1;
     self.total_millions_of_instructions += task.millions_of_instructions;

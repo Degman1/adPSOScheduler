@@ -154,7 +154,7 @@ pub fn build_test6_data_center() -> simulation::data_center::DataCenter {
 pub fn build_test6_workload() -> simulation::workload::Workload {
   reset_workload_id_counter();
 
-  let n_tasks: usize = 5;
+  let n_tasks: usize = 2;
   let task_mi_low: usize = 5;
   let task_mi_high: usize = 20;
 
@@ -234,15 +234,15 @@ pub fn build_basic_data_center() -> simulation::data_center::DataCenter {
 
 pub fn basic_tests() {
   println!("Hello, world!");
-  let t = simulation::task::Task::new(500);
-  let t2 = simulation::task::Task::new(600);
+  let t = simulation::task::Task::new(9);
+  let t2 = simulation::task::Task::new(19);
   println!("{} {}", t, t2);
   let mut wk = simulation::workload::Workload::new();
   wk.add_task(t);
   wk.add_task(t2);
   println!("{}", wk);
-  let vm = simulation::virtual_machine::VirtualMachine::new(200, 300.0);
-  let vm2 = simulation::virtual_machine::VirtualMachine::new(400, 500.0);
+  let vm = simulation::virtual_machine::VirtualMachine::new(95, 5.263158);
+  let vm2 = simulation::virtual_machine::VirtualMachine::new(99, 5.050505);
   println!("{} {}", vm, vm2);
   let mut dc = simulation::data_center::DataCenter::new();
   dc.add_virtual_machine(vm);
@@ -253,7 +253,11 @@ pub fn basic_tests() {
   dc.add_execution_time_to_virtual_machine(&wk.tasks[0], 0);
   dc.add_execution_time_to_virtual_machine(&wk.tasks[1], 1);
   let obj = dc.compute_objective();
-  println!("{}", obj);
+  println!("{:?}", dc.virtual_machine_ready_time);
+  println!("Objective: {}", obj);
+  println!("Makespan: {}", dc.compute_makespan());
+  println!("Throughput: {}", dc.compute_throughput());
+  println!("TEC: {}", dc.compute_energy_consumption_kwh());
   let t3 = simulation::task::Task::new(100);
   let t4 = simulation::task::Task::new(50);
   wk.add_task(t3);
@@ -309,14 +313,9 @@ pub fn run_test_pso_main() {
   }
 
   println!("Global Best Objective: {:?}", swarm.global_best_objective);
-  println!("Global Best Throughput: {:?}", swarm.global_best_throughput);
-  println!("Global best pos (double check) \n{}", swarm.global_best_position);
-  println!("Global best vmrt \n{:?}", swarm.data_center.virtual_machine_ready_time);
-  println!("Global Best Objective (double check): {:?}", swarm.data_center.compute_objective());
-  println!("Global Best Makespan (double check): {:?} sec", swarm.data_center.compute_makespan());
-  println!("Global Best Throughput (double check): {:?} tasks/sec", swarm.data_center.compute_throughput());
-  println!("Global Best Energy Consumption (double check): {:?} kWh", swarm.data_center.compute_energy_consumption_kwh());
-  // println!("Final Mapping: {:?}", swarm.global_best_task_vm_mapping);
+  println!("Global Best Makespan: {:?}", swarm.data_center.compute_makespan());
+  println!("Global Best Throughput: {:?} tasks/sec", swarm.data_center.compute_throughput());
+  println!("Global Best Energy Consumption: {:?} kWh", swarm.data_center.compute_energy_consumption_kwh());
 
   println!("Saving objective history to objective_history.csv... ");
   // Save the cost history to local file
