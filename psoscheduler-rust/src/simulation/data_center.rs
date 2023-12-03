@@ -87,10 +87,10 @@ impl DataCenter {
     }
 
     // Now we have joules, so divide it by the total number of seconds to get Watts=J/s
-    energy_consumption /= makespan as f32;
+    // energy_consumption /= makespan as f32;
 
     // Now, convert to kWh
-    energy_consumption *= 1. / 3600000.;
+    energy_consumption /= 3600000.;
 
     return energy_consumption;
   }

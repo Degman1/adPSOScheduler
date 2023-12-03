@@ -36,7 +36,7 @@ impl Particle {
 
     for task in workload.get_sorted_tasks().iter() {
       let vm_id: usize;
-      if utilities::get_random_float(0., 1.) < 0.3 {
+      if utilities::get_random_float(0., 1.) < 0.25 {
         vm_id = utilities::get_random_integer(0, data_center.virtual_machines.len());
       } else {
         vm_id = data_center.get_min_eet_virtual_machine(task);

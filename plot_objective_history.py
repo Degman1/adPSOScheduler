@@ -9,9 +9,9 @@ def plot(test_id, language, particle_histories, path):
     plt.plot([i for i in range(len(particle_history))], particle_history, linewidth=1.0, label=f"Particle {i}")
     i += 1
 
-  plt.title(f"{language.capitalize()} Test {test_id}: adPSO Objective History")
+  plt.title(f"{language.capitalize()} Test {test_id}: PSO Objective History")
   plt.xlabel("Iteration Number")
-  plt.ylabel("Objective Value")
+  plt.ylabel("Local Best Objective Value")
   plt.legend(bbox_to_anchor = (1.25, 0.5), loc='center right')
   plt.tight_layout()
 
