@@ -66,8 +66,7 @@ public class Scheduler {
         System.out.println("Global Best Makespan: " + dataCenter.computeMakespan() + " sec");
         System.out.println("Global Best Throughput: " + dataCenter.computeThroughput() + " tasks/sec");
         System.out.println("Global Best Energy Consumption: " + dataCenter.computeEnergyConsumptionkWh() + " kWh");
-        // System.out.println("Global Best Mapping: " + mapping);
-        // System.out.println(dataCenter);
+
         System.out.print("Saving objective history to objective_history.csv... ");
         
         if (recordObjectiveHistory) {

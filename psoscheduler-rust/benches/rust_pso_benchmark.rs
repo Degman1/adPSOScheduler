@@ -7,9 +7,10 @@ use psoscheduler;
 
 pub fn criterion_benchmark(c: &mut Criterion) {
   let mut group = c.benchmark_group("Rust PSO");
-  group.warm_up_time(Duration::from_secs(1));
-  // group.measurement_time(Duration::from_secs(152));
-  group.bench_function("Rust PSO Test 11 Benchmark", |b| b.iter(|| psoscheduler::run_pso_algorithm(black_box(psoscheduler::build_test11_workload()), black_box(psoscheduler::build_test11_data_center()))));
+  group.warm_up_time(Duration::from_secs(6));
+  group.sample_size(50);
+  group.measurement_time(Duration::from_secs(125));
+  group.bench_function("Test 11 Benchmark", |b| b.iter(|| psoscheduler::run_pso_algorithm(black_box(psoscheduler::build_test11_workload()), black_box(psoscheduler::build_test11_data_center()))));
   group.finish();
 }
 

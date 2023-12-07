@@ -3,5 +3,7 @@ dontinline,*.*_avgt_jmhStub
 dontinline,*.*_sample_jmhStub
 dontinline,*.*_ss_jmhStub
 dontinline,*.*_thrpt_jmhStub
+inline,syslab/cloudcomputing/benchmarks/MatrixOpsBenchmark$MyState.setupRandomMatrices
+inline,syslab/cloudcomputing/benchmarks/MatrixOpsBenchmark.runSingleSubtract
 inline,syslab/cloudcomputing/benchmarks/PSOBenchmark$MyState.setupTest11Data
 inline,syslab/cloudcomputing/benchmarks/PSOBenchmark.runSinglePSO

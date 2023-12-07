@@ -7,7 +7,7 @@
 #    [testID] = The id of the custom test found the Scheduler class || The name of the hcsp data set file in quotes
 #   ~[jdkPath] = The string path where the java jdk bin is located
 
-jdkPath=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/bin/java
+jdkPath=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java
 if [[ $4 -ne 0 ]]; then
   echo "Using custom jdk path"
   jdkPath=$4

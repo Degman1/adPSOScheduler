@@ -184,19 +184,16 @@ public class Particle {
     double r1 = Utilities.getRandomDouble(0, 1);
     double r2 = Utilities.getRandomDouble(0, 1);
 
-    // System.out.println("\nParticle " + this.id + " Velocity (before): " + this.velocity);
     Matrix previousVelocityFactor = this.velocity.multiply(w);
     Matrix localExploration = this.personalBestPosition.copy().subtract(this.position).multiply(Particle.c1 * r1);
     Matrix globalExploration = this.globalBestPosition.copy().subtract(this.position).multiply(Particle.c2 * r2);
     this.velocity = previousVelocityFactor.add(localExploration).add(globalExploration)
                                           .enforceElementwiseBound(Particle.maxAbsoluteVelocity);
-    // System.out.println("Particle " + this.id + " Velocity (after): " + this.velocity);
   }
 
   private void updatePositionAndDataCenter() {
     // Instead of the standard PSO update equation, use the one defined in https://www.sciencedirect.com/science/article/pii/S1319157820305279#e0045
     // Because this version of PSO is discrete in nature
-    // System.out.println("\nParticle " + this.id + " Position (before): " + this.position);
     this.position.zeroOut();
     this.dataCenter.resetVirtualMachineReadyTimes();
 
@@ -205,7 +202,6 @@ public class Particle {
       this.position.setComponent(i, j, 1);
       this.dataCenter.addExecutionTimeToVirtualMachine(this.workload.getTaskById(i), this.dataCenter.getVirtualMachineById(j));
     }
-    // System.out.println("Particle " + this.id + " Position (after): " + this.position);
   }
 
   public int getId() {

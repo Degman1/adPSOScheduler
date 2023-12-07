@@ -22,7 +22,7 @@ impl Workload {
     self.tasks.push(t);
   }
 
-  pub fn get_sorted_tasks(&mut self) -> Vec<&Task> {
+  pub fn get_sorted_tasks(&self) -> Vec<&Task> {
     let mut clone = Vec::new();
     for task in self.tasks.iter() {
       clone.push(task);
