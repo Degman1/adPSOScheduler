@@ -1,6 +1,7 @@
 package syslab.cloudcomputing.benchmarks;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
@@ -12,7 +13,6 @@ import syslab.cloudcomputing.simulation.Task;
 import syslab.cloudcomputing.simulation.VirtualMachine;
 import syslab.cloudcomputing.simulation.Workload;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PSOBenchmark {
@@ -44,8 +44,8 @@ public class PSOBenchmark {
   @Benchmark
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.SECONDS)
-  public HashMap<Task, VirtualMachine> runSinglePSO(MyState state) {
+  public void runSinglePSO(MyState state, Blackhole blackhole) {
     PSOSwarm swarm = new PSOSwarm(state.dataCenter, state.workload);
-    return swarm.runPSOAlgorithm();
+    blackhole.consume(swarm.runPSOAlgorithm());
   }
 }

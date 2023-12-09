@@ -3,6 +3,7 @@ package syslab.cloudcomputing.benchmarks;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
@@ -34,8 +35,8 @@ public class MatrixOpsBenchmark {
 
   @Benchmark
   @BenchmarkMode(Mode.AverageTime)
-  @OutputTimeUnit(TimeUnit.NANOSECONDS)
-  public Matrix runSingleSubtract(MyState state) {
-    return state.m1.subtract(state.m2);
+  @OutputTimeUnit(TimeUnit.MICROSECONDS)
+  public void runSingleSubtract(MyState state, Blackhole blackhole) {
+    blackhole.consume(state.m1.subtract(state.m2));
   }
 }

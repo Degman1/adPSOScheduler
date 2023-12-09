@@ -13,7 +13,7 @@ public class PSOSwarm {
   private final double w1 = 0.9;
   private final double w2 = 0.4;
 
-  private final int maxIterations = 200;
+  private final int maxIterations = 700;
   private static final int nSwarms = 5;
   private static final int nParticles = 20;
 
@@ -41,7 +41,7 @@ public class PSOSwarm {
   private void initializeSwarm(int nParticles) {
     this.particles = new ArrayList<Particle>();
     for (int i = 0; i < nParticles; i++) {
-      Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.RANDOM);
+      Particle particle = new Particle(this.dataCenter, this.workload, Particle.InitializationStrategy.HIGH_TASK_HIGH_VM);
       this.particles.add(particle);
     }
 
