@@ -102,9 +102,9 @@ impl DataCenter {
     let makespan = self.compute_makespan();
     let throughput = (self.task_count as f32) / makespan;
     let wh = self._compute_energy_consumption_kwh(makespan) * 1000.;
-    let kwh_per_task = wh / self.task_count as f32;
+    let wh_per_task = wh / self.task_count as f32;
     // Scale the energy consumption to an appropriate weight in the objective function
-    return throughput + (0.1 / kwh_per_task);
+    return throughput + (0.1 / wh_per_task);
   }
 
   pub fn get_min_eet_virtual_machine(&self, task: &Task) -> usize {
