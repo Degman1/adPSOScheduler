@@ -1,4 +1,4 @@
-# adPSOScheduler
+# Reinforcing Cloud System Security and Sustainability with Rust-based Particle Swarm Optimization Task Scheduling
 
 ## Introduction
 
@@ -10,11 +10,11 @@ With the widespread popularity of cloud computing solutions in industry, the eff
 
 ## Repository Struture
 
-This repository has two main directories, `psoscheduler-java` and `psoscheduler-rust` that house the Java and Rust algorithms respectively. Both have a number of subdirectories that logically group together portions of the algorithm. The `pso` subdirectory houses the main algorithm including particle and swarm logic. The `simulation` subdirectory houses the data center and task load simulations. The `utils` subdirectory houses a variety of utility functions for data manipulation and transformation. In the Java version, the randomized test cases 1-11 can be found in the `schedule` subdirectory. In the Rust version, the test cases 1-6, 11 are found in `lib.rs`.
+This repository has two main directories, `psoscheduler-java` and `psoscheduler-rust` that house the Java and Rust algorithms respectively. Both have several subdirectories that logically group portions of the algorithm. The `pso` subdirectory houses the main algorithm including particle and swarm logic. The `simulation` subdirectory houses the data center and task load simulations. The `utils` subdirectory houses a variety of utility functions for data manipulation and transformation. In the Java version, the randomized test cases 1-11 are in the `schedule` subdirectory. In the Rust version, the test cases 1-6, 11 are found in `lib.rs`.
 
 ## Usage
 
-A general purpose script `testPSO.sh` has been developed to easily test the Java and Rust Particle Swarm Optimization (PSO) algorithms with constructed test data sets as well as the standardized HCSP instances[^1] that are publicly available for download[^2].
+A general-purpose script `testPSO.sh` has been developed to easily test the Java and Rust Particle Swarm Optimization (PSO) algorithms with constructed test data sets as well as the standardized HCSP instances[^1] that are publicly available for download[^2].
 
 **General Usage:** `/testJavaPSO.sh [language] [testType] [testID] ~[jdkPath]`
 
