@@ -27,8 +27,6 @@ A general-purpose script `testPSO.sh` has been developed to easily test the Java
 
 **Note** that `~` implies optional arguments
 
-## References
-
 [^1]: Braun, T.—Siegel, H.—Beck, N.—Bol¨ oni, L.—Maheswaran, M.— ¨
 Reuther, A.—Robertson, J.—Theys, M.—Yao, B.—Hensgen, D.—
 Freund, R.: A Comparison of Eleven Static Heuristics for Mapping a Class of
